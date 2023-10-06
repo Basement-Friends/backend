@@ -1,38 +1,52 @@
 package basement.friends.backend.service.implementation;
 
+import basement.friends.backend.exception.EmailNotFoundException;
+import basement.friends.backend.exception.UserIdNotFoundException;
+import basement.friends.backend.exception.UsernameNotFoundException;
 import basement.friends.backend.model.User;
 import basement.friends.backend.repository.UserRepository;
 import basement.friends.backend.service.definition.UserService;
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
-
+@Service
+@AllArgsConstructor
 public class UserServiceImpl implements UserService {
 
     UserRepository userRepository;
+
     @Override
-    public Optional<User> getById(String id) {
-        return userRepository.findById(id).blockOptional();
+    public User getById(String id) {
+        return userRepository.getUserById(id)
+                .orElseThrow(UserIdNotFoundException::new);
     }
 
     @Override
-    public Optional<User> getByUsername(String username) {
-        return userRepository.getUserByUsername(username);
+    public User getByUsername(String username) {
+        return userRepository.getUserByUsername(username)
+                .orElseThrow(UsernameNotFoundException::new);
+    }
+
+    @Override
+    public User getByEmail(String email) {
+        return userRepository.getUserByEmail(email)
+                .orElseThrow(EmailNotFoundException::new);
     }
 
     @Override
     public List<User> getAll() {
-        return (List<User>) userRepository.findAll();
+        return userRepository.getAll();
     }
 
     @Override
     public User save(User user) {
-        return null;
+        return userRepository.save(user).block();
     }
 
     @Override
     public void delete(String id) {
-
+        userRepository.deleteById(id);
     }
 
     @Override
