@@ -1,9 +1,7 @@
 package basement.friends.backend.api.handlers;
 
 import basement.friends.backend.api.handlers.DTO.ErrorResponse;
-import basement.friends.backend.exception.EmailNotFoundException;
-import basement.friends.backend.exception.UserIdNotFoundException;
-import basement.friends.backend.exception.UsernameNotFoundException;
+import basement.friends.backend.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -14,19 +12,31 @@ public class BusinessExceptionHandler {
 
     @ExceptionHandler(UsernameNotFoundException.class)
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
-    public ErrorResponse usernameNotFoundException(UsernameNotFoundException exception) {
+    public ErrorResponse usernameNotFoundExceptionResponse(UsernameNotFoundException exception) {
         return new ErrorResponse(exception);
     }
 
     @ExceptionHandler(UserIdNotFoundException.class)
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
-    public ErrorResponse userIdNotFoundException(UserIdNotFoundException exception) {
+    public ErrorResponse userIdNotFoundExceptionResponse(UserIdNotFoundException exception) {
         return new ErrorResponse(exception);
     }
 
     @ExceptionHandler(EmailNotFoundException.class)
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
-    public ErrorResponse emailNotFoundException(EmailNotFoundException exception) {
+    public ErrorResponse emailNotFoundExceptionResponse(EmailNotFoundException exception) {
         return new ErrorResponse(exception);
     }
+
+    @ExceptionHandler(EmailExistsException.class)
+    @ResponseStatus(value = HttpStatus.NOT_ACCEPTABLE)
+    public ErrorResponse emailExistsExceptionResponse(EmailExistsException exception) {
+        return new ErrorResponse(exception);
+    }
+    @ExceptionHandler(IncorrectPasswordException.class)
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    public ErrorResponse incorrectPasswordExceptionResponse(IncorrectPasswordException exception) {
+        return new ErrorResponse(exception);
+    }
+
 }

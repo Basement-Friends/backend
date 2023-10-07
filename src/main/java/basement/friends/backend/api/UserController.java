@@ -3,7 +3,6 @@ package basement.friends.backend.api;
 import basement.friends.backend.model.User;
 import basement.friends.backend.service.definition.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,7 +20,6 @@ public class UserController {
         return userService.getAll();
     }
 
-    @Secured("ROLE_ADMIN")
     @GetMapping("/{username}")
     Optional<User> getStudentByUsername(@PathVariable String username) {
         return Optional.ofNullable(userService.getByUsername(username));
