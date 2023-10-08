@@ -26,8 +26,7 @@ public class User implements UserDetails {
 
 
     @Builder
-    public User(String id, String username, String password, Set<Role> roles, String email) {
-        this.id = id;
+    public User(String username, String password, Set<Role> roles, String email) {
         this.username = username;
         this.password = password;
         this.roles = roles;
@@ -41,12 +40,12 @@ public class User implements UserDetails {
 
     @Override
     public String getPassword() {
-        return null;
+        return password;
     }
 
     @Override
     public String getUsername() {
-        return null;
+        return username;
     }
 
     @Override

@@ -18,7 +18,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getById(String id) {
-        return userRepository.getUserById(id)
+        return userRepository.findById(id)
                 .orElseThrow(UserIdNotFoundException::new);
     }
 
@@ -36,12 +36,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> getAll() {
-        return userRepository.getAll();
+        return userRepository.findAll();
     }
 
     @Override
     public User save(User user) {
-        return userRepository.save(user).block();
+        return userRepository.save(user);
     }
 
     @Override
