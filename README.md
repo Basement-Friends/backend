@@ -1,2 +1,3 @@
 # backend
-backend for emp-loyee portfolio app
+
+backend for basement friends app
