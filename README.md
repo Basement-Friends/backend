@@ -1,2 +1,7 @@
 # backend
-backend for emp-loyee portfolio app
+
+backend for basement friends app
+
+Created in Java and Spring Boot
+Created by karolinak00, mtszpl, dannelysbeth
+Used database MongoDB
