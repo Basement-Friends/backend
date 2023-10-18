@@ -1,17 +1,16 @@
-package basement.friends.backend.model;
+package basement.friends.backend.model.response;
 
+import basement.friends.backend.model.Rank;
+import basement.friends.backend.model.UserGameRecord;
 import basement.friends.backend.model.enums.Gender;
-import lombok.Builder;
 import lombok.Data;
 import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.LocalDate;
 import java.util.Set;
 
 @Data
-@Builder
-@Document
-public class GamerInformation {
+public class GamerInfoFullResponse {
     private String firstName;
     private String lastName;
 
@@ -24,10 +23,10 @@ public class GamerInformation {
 
     private Set<Rank> ranks;
 
-    private Address address;
+    private String country;
 
+    private String city;
 
-
-
+    private LocalDate localTime;
 
 }
