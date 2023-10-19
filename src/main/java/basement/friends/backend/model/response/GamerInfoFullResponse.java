@@ -29,4 +29,6 @@ public class GamerInfoFullResponse {
 
     private LocalDate localTime;
 
+    private String pictureUrl;
+
 }
