@@ -18,6 +18,7 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class AuthService {
     private final UserRepository userRepository;
+    private
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
 
