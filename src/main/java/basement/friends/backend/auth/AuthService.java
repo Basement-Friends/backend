@@ -4,8 +4,10 @@ package basement.friends.backend.auth;
 import basement.friends.backend.exception.EmailExistsException;
 import basement.friends.backend.exception.IncorrectPasswordException;
 import basement.friends.backend.exception.UsernameNotFoundException;
+import basement.friends.backend.model.GamerInformation;
 import basement.friends.backend.model.User;
 import basement.friends.backend.model.enums.Role;
+import basement.friends.backend.repository.GamerRepository;
 import basement.friends.backend.repository.UserRepository;
 import basement.friends.backend.security.JwtService;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +20,7 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class AuthService {
     private final UserRepository userRepository;
-    private
+    private final GamerRepository gamerRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
 
@@ -33,6 +35,12 @@ public class AuthService {
                 .roles(Set.of(Role.ROLE_USER))
                 .build();
         userRepository.save(user);
+        GamerInformation gamerInformation = GamerInformation.builder()
+                .id(user.getId())
+                .firstName(request.getFirstName())
+                .lastName(request.getFirstName())
+                .build();
+        gamerRepository.save(gamerInformation);
         String jwtToken = jwtService.generateToken(user);
         return AuthenticationResponse.builder()
                 .token(jwtToken)
