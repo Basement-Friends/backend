@@ -93,6 +93,9 @@
 
 
     <build>
+        <finalName>basement-friends</finalName>
+        <testSourceDirectory>src/test/java</testSourceDirectory>
+        <testOutputDirectory>target/test-classes</testOutputDirectory>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
@@ -103,6 +106,17 @@
                             <groupId>org.projectlombok</groupId>
                             <artifactId>lombok</artifactId>
                         </exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.2.1</version> <!-- Use the latest version -->
+                <configuration>
+                    <excludes>
+                        <exclude>**/*BackendApplicationTests.java</exclude>
+<!--                        <exclude>**/*AnotherTestToExclude.java</exclude>-->
                     </excludes>
                 </configuration>
             </plugin>
