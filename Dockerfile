@@ -1,6 +1,6 @@
 FROM openjdk:21
-ADD target/basement-friends.jar app.jar
-ENTRYPOINT ["java","-jar","/app.jar"]
+ADD target/basement-friends.jar basement-friends.jar
+ENTRYPOINT ["java","-jar","/basement-friends.jar"]
 
 
 #FROM openjdk:21
