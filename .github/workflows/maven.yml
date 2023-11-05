@@ -30,12 +30,23 @@ jobs:
     - name: Build with Maven
       run: mvn clean install
     - name: Build & push Docker image
-      uses: mr-smithers-excellent/docker-build-push@v6
+    # need checkout before using compose-action
+    - uses: actions/checkout@v3
+    - uses: isbang/compose-action@v1.5.1
       with:
-        image: dannelysbeth/basement-friends
-        tags: latest
-        registry: docker.io
-        dockerfile: Dockerfile
+        compose-file: "./docker/docker-compose.yml"
+        down-flags: "--volumes"
+        services: |
+          web
+          mongodb
+          mongo-express
+#      uses: mr-smithers-excellent/docker-build-push@v6
+#      with:
+#        image: dannelysbeth/basement-friends
+#        tags: latest
+#        registry: docker.io
+#        dockerfile: Dockerfile
+#        docker-compose:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
 
