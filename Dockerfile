@@ -1,8 +1,6 @@
 FROM openjdk:21
-ARG JAR_FILE=target/*.jar
-COPY ${JAR_FILE} app.jar
-EXPOSE 8080
-ENTRYPOINT ["java","-jar","/app.jar"]
+ADD target/basement-friends.jar basement-friends.jar
+ENTRYPOINT ["java","-jar","/basement-friends.jar"]
 
 
 #FROM openjdk:21

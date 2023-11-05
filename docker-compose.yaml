@@ -2,10 +2,17 @@
 version: "3.8"
 
 services:
+  web:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    image: web:latest
+    ports:
+      - "8080:8080"
 
   mongodb:
     image: mongo
-    container_name: mongodb
+    container_name: mongodb_bs
     restart: always
     ports:
       - "27017:27017"
