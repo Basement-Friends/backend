@@ -31,10 +31,10 @@ jobs:
       run: mvn clean install
     - name: Build & push Docker image
     # need checkout before using compose-action
-    - uses: actions/checkout@v3
-    - uses: isbang/compose-action@v1.5.1
+#      uses: actions/checkout@v3
+      uses: isbang/compose-action@v1.5.1
       with:
-        compose-file: "./docker/docker-compose.yml"
+        compose-file: "docker-compose.yml"
         down-flags: "--volumes"
         services: |
           web
