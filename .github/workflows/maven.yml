@@ -71,9 +71,9 @@ jobs:
       uses: docker/build-push-action@v2
       with:
         context: .
-        file: docker-compose.yaml
-        services: all # Build and push images for all services
+        file: docker-compose.yml
+        services: web, mongodb, mongo-express # List of services you want to build
+        push: true
       env:
         DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
         DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-
