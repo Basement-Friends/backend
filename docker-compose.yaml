@@ -1,19 +1,12 @@
 # Use root/example as user/password credentials
 version: "3.8"
-
 services:
-  web:
-    build:
-      context: ./
-      dockerfile: Dockerfile
-    image: web:latest
-    ports:
-      - "8080:8080"
-
   mongodb:
     image: mongo
     container_name: mongodb_bs
-    restart: always
+    expose:
+      - 27017
+#    restart: always
     ports:
       - "27017:27017"
     volumes:
@@ -24,7 +17,7 @@ services:
 
   mongo-express:
     image: mongo-express
-    container_name: mongo_express
+    container_name: mongo_express_bs
     restart: always
     ports:
       - "8081:8081"
@@ -33,9 +26,21 @@ services:
       ME_CONFIG_MONGODB_ADMINPASSWORD: root
       ME_CONFIG_MONGODB_SERVER: mongodb
 
+  web:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    image: web:latest
+    container_name: bs_backend_app
+    ports:
+      - "8080:8080"
+    depends_on:
+      mongodb:
+        condition: service_started
+
 volumes:
   data: {}
 
 networks:
   default:
-    name: mongodb_network
+    name: basement_friends_network

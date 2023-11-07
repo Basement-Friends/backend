@@ -1,10 +1,47 @@
-# This workflow will build a Java project with Maven, and cache/restore any dependencies to improve the workflow execution time
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-maven
-
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
+## This workflow will build a Java project with Maven, and cache/restore any dependencies to improve the workflow execution time
+## For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-maven
+#
+## This workflow uses actions that are not certified by GitHub.
+## They are provided by a third-party and are governed by
+## separate terms of service, privacy policy, and support
+## documentation.
+#
+#name: Basement Friends backend App
+#
+#on:
+#  push:
+#    branches: [ "main" ]
+#  pull_request:
+#    branches: [ "main" ]
+#
+#jobs:
+#  build:
+#
+#    runs-on: ubuntu-latest
+#
+#    steps:
+#    - uses: actions/checkout@v3
+#    - name: Set up JDK 21
+#      uses: actions/setup-java@v3
+#      with:
+#        java-version: '21'
+#        distribution: 'temurin'
+#        cache: maven
+#    - name: Build with Maven
+#      run: mvn clean install
+#    - name: Build & push Docker image
+#      uses: mr-smithers-excellent/docker-build-push@v6
+#      with:
+#        image: dannelysbeth/basement-friends
+#        tags: latest
+#        registry: docker.io
+#        dockerfile: Dockerfile
+#        username: ${{ secrets.DOCKER_USERNAME }}
+#        password: ${{ secrets.DOCKER_PASSWORD }}
+#
+##    # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
+##    - name: Update dependency graph
+##      uses: advanced-security/maven-dependency-submission-action@571e99aab1055c2e71a1e2309b9691de18d6b7d6
 
 name: Basement Friends backend App
 
@@ -20,36 +57,26 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Set up JDK 21
-      uses: actions/setup-java@v3
-      with:
-        java-version: '21'
-        distribution: 'temurin'
-        cache: maven
-    - name: Build with Maven
-      run: mvn clean install
-    - name: Build & push Docker image
-    # need checkout before using compose-action
-#      uses: actions/checkout@v3
-      uses: isbang/compose-action@v1.5.1
-      with:
-        compose-file: "docker-compose.yml"
-        down-flags: "--volumes"
-        services: |
-          web
-          mongodb
-          mongo-express
-#      uses: mr-smithers-excellent/docker-build-push@v6
-#      with:
-#        image: dannelysbeth/basement-friends
-#        tags: latest
-#        registry: docker.io
-#        dockerfile: Dockerfile
-#        docker-compose:
-        username: ${{ secrets.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_PASSWORD }}
+      - uses: actions/checkout@v2
+      - name: Set up JDK 21
+        uses: actions/setup-java@v2
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+      - name: Build with Maven
+        run: mvn clean install
+      - name: Set up Docker
+        uses: docker/setup-buildx-action@v1
+      - name: Build & push Docker images
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          files: |
+            Dockerfile.web
+            Dockerfile.mongodb
+            Dockerfile.mongo-express
+          platforms: linux/amd64
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
 
-#    # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
-#    - name: Update dependency graph
-#      uses: advanced-security/maven-dependency-submission-action@571e99aab1055c2e71a1e2309b9691de18d6b7d6
