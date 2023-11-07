@@ -81,7 +81,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: .
-          file: docker-compose.yml
+          file: docker-compose.yaml
           services: all # Build and push images for all services
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
