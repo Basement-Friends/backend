@@ -2,7 +2,7 @@
 version: "3.8"
 services:
   mongodb:
-    image: mongo
+    image: mongo:latest
     container_name: mongodb_bs
     expose:
       - 27017
@@ -16,7 +16,7 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: root
 
   mongo-express:
-    image: mongo-express
+    image: mongo-express:latest
     container_name: mongo_express_bs
     restart: always
     ports:
