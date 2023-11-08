@@ -61,7 +61,8 @@ jobs:
     - name: Set up JDK 21
       uses: actions/setup-java@v2
       with:
-        java-version: '21' # Adjust the Java version as needed
+        java-version: '21'
+        distribution: 'temurin'
     - name: Build with Maven
       run: mvn clean install
     - name: Set up Docker
@@ -70,9 +71,8 @@ jobs:
       uses: docker/build-push-action@v2
       with:
         context: .
-        file: docker-compose.yml
-        services: web, mongodb, mongo-express # List of services you want to build
-        push: true
+        file: docker-compose.yaml
+        services: all # Build and push images for all services
       env:
         DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
         DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
