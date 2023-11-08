@@ -69,9 +69,9 @@ jobs:
       run: docker-compose up -d
     - name: Build & push Docker image
       run: |
+        docker tag basement-friends dannelysbeth/basement-friends
         docker-compose -f docker-compose.yaml build
         docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-        docker tag basement-friends dannelysbeth/basement-friends
         docker-compose -f docker-compose.yaml push
       # uses: mr-smithers-excellent/docker-build-push@v6
       # with:
