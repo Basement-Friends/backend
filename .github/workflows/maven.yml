@@ -67,6 +67,15 @@ jobs:
       run: mvn clean install
     - name: Run docker-compose
       run: docker-compose up -d
+    - name: Build & push Docker image
+      uses: mr-smithers-excellent/docker-build-push@v6
+      with:
+       image: dannelysbeth/basement-friends
+       tags: latest
+       registry: docker.io
+       dockerfile: Dockerfile
+       username: ${{ secrets.DOCKER_USERNAME }}
+       password: ${{ secrets.DOCKER_PASSWORD }}
     # - name: Set up Docker
     #   uses: docker/setup-buildx-action@v1
     # - uses: actions/checkout@v3
@@ -78,7 +87,7 @@ jobs:
     #       mongodb
     #       mongo-express
     #       web
-      env:
-        DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-        DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      # env:
+      #   DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      #   DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
 
