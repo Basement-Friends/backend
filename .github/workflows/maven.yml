@@ -68,14 +68,18 @@ jobs:
     - name: Run docker-compose
       run: docker-compose up -d
     - name: Build & push Docker image
-      uses: mr-smithers-excellent/docker-build-push@v6
-      with:
-       image: dannelysbeth/basement-friends
-       tags: latest
-       registry: docker.io
-       dockerfile: Dockerfile
-       username: ${{ secrets.DOCKER_USERNAME }}
-       password: ${{ secrets.DOCKER_PASSWORD }}
+      run: |
+        docker-compose -f docker-compose.yml build
+        docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+        docker-compose -f docker-compose.yml push
+      # uses: mr-smithers-excellent/docker-build-push@v6
+      # with:
+      #  image: dannelysbeth/basement-friends
+      #  tags: latest
+      #  registry: docker.io
+      #  dockerfile: Dockerfile
+      #  username: ${{ secrets.DOCKER_USERNAME }}
+      #  password: ${{ secrets.DOCKER_PASSWORD }}
     # - name: Set up Docker
     #   uses: docker/setup-buildx-action@v1
     # - uses: actions/checkout@v3
