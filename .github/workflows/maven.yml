@@ -65,17 +65,19 @@ jobs:
         distribution: 'temurin'
     - name: Build with Maven
       run: mvn clean install
-    - name: Set up Docker
-      uses: docker/setup-buildx-action@v1
-    - uses: actions/checkout@v3
-    - uses: isbang/compose-action@v1.5.1
-      with:
-        compose-file: "./docker-compose.yaml"
-        down-flags: "--volumes"
-        services: |
-          mongodb
-          mongo-express
-          web
+    - name: Run docker-compose
+      run: docker-compose up -d
+    # - name: Set up Docker
+    #   uses: docker/setup-buildx-action@v1
+    # - uses: actions/checkout@v3
+    # - uses: isbang/compose-action@v1.5.1
+    #   with:
+    #     compose-file: "./docker-compose.yaml"
+    #     down-flags: "--volumes"
+    #     services: |
+    #       mongodb
+    #       mongo-express
+    #       web
       env:
         DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
         DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
