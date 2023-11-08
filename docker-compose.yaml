@@ -1,4 +1,3 @@
-# Use root/example as user/password credentials
 version: "3.8"
 services:
   mongodb:
@@ -6,7 +5,6 @@ services:
     container_name: mongodb_bs
     expose:
       - 27017
-#    restart: always
     ports:
       - "27017:27017"
     volumes:
@@ -21,6 +19,10 @@ services:
     restart: always
     ports:
       - "8081:8081"
+    expose:
+      - 8081
+    volumes:
+      - data:/data
     environment:
       ME_CONFIG_MONGODB_ADMINUSERNAME: root
       ME_CONFIG_MONGODB_ADMINPASSWORD: root
@@ -34,6 +36,11 @@ services:
     container_name: bs_backend_app
     ports:
       - "8080:8080"
+    expose:
+      - 8080
+    volumes:
+      - data:/data
+    restart: always
     depends_on:
       mongodb:
         condition: service_started
