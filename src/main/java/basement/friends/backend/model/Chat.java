@@ -12,10 +12,10 @@ import java.util.Set;
 @Document
 @Builder
 public class Chat {
-    Set<User> users;
-    List<Message> messages;
     @Id
     private String id;
 
+    Set<User> users;
+    List<Message> messages;
 
 }
