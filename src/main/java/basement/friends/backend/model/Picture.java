@@ -8,11 +8,14 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Data
 @Builder
 @Document
-public class ProfilePicture {
+public class Picture {
     @Id
     private String id;
-    private User user;
+    private String name;
     private long size;
     private byte [] content;
+
+    private User user;
+
 
 }
