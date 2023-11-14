@@ -39,4 +39,16 @@ public class BusinessExceptionHandler {
         return new ErrorResponse(exception);
     }
 
+    @ExceptionHandler(PictureNotFoundException.class)
+    @ResponseStatus(value = HttpStatus.NOT_FOUND)
+    public ErrorResponse pictureNotFoundExceptionResponse(PictureNotFoundException exception) {
+        return new ErrorResponse(exception);
+    }
+
+    @ExceptionHandler(NotValidPictureException.class)
+    @ResponseStatus(value = HttpStatus.NOT_FOUND)
+    public ErrorResponse notValidPictureExceptionResponse(NotValidPictureException exception) {
+        return new ErrorResponse(exception);
+    }
+
 }
