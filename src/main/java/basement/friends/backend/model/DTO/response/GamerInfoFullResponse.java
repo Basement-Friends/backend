@@ -1,4 +1,4 @@
-package basement.friends.backend.model.response;
+package basement.friends.backend.model.DTO.response;
 
 import basement.friends.backend.model.Rank;
 import basement.friends.backend.model.UserGameRecord;

@@ -1,10 +1,9 @@
-package basement.friends.backend.model.request;
+package basement.friends.backend.model.DTO.request;
 
 import basement.friends.backend.exception.NotValidPictureException;
 import basement.friends.backend.model.Picture;
 import basement.friends.backend.model.User;
 import jakarta.activation.MimetypesFileTypeMap;
-import lombok.Builder;
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -12,11 +11,7 @@ import java.io.File;
 import java.io.IOException;
 
 @Data
-@Builder
 public class UploadPictureRequest {
-    MultipartFile file;
-    String username;
-
     private boolean checkIfValidPicture(MultipartFile file) {
         String filepath = file.getOriginalFilename();
         assert filepath != null;

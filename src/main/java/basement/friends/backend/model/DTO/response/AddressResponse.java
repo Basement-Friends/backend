@@ -1,4 +1,4 @@
-package basement.friends.backend.model.response;
+package basement.friends.backend.model.DTO.response;
 
 import lombok.Data;
 
