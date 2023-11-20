@@ -39,7 +39,7 @@ public class User implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        String[] rolesArray = {"USER_ROLE"};
+        String[] rolesArray = {"ROLE_USER"};
 //                roles.stream(role -> {
 //            return role.getName();
 //        });
