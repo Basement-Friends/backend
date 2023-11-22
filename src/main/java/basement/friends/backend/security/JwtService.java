@@ -1,8 +1,6 @@
 package basement.friends.backend.security;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
@@ -64,11 +62,13 @@ public class JwtService {
     }
 
     private Claims extractAllClaims(String token) {
-        return Jwts.parserBuilder()
+        JwtParser jwtParser = Jwts.parserBuilder()
                 .setSigningKey(getSignKey())
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
+                .build();
+        Jws<Claims> jwtClaims = jwtParser.parseClaimsJws(token);
+        Claims claims = jwtClaims.getBody();
+
+        return claims;
     }
 
     private Key getSignKey() {
