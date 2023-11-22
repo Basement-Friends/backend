@@ -7,10 +7,13 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Set;
+
+import static java.util.Arrays.stream;
 
 @Document
 @Data
@@ -20,13 +23,13 @@ public class User implements UserDetails {
     @Indexed(unique = true)
     private String username;
     private String password;
-    private Set<Role> roles;
+    private Collection<Role> roles;
     @Indexed(unique = true)
     private String email;
 
 
     @Builder
-    public User(String username, String password, Set<Role> roles, String email) {
+    public User(String username, String password, Collection<Role> roles, String email) {
         this.username = username;
         this.password = password;
         this.roles = roles;
@@ -35,7 +38,14 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
+        String[] rolesArray = {"ROLE_USER"};
+//                roles.stream(role -> {
+//            return role.getName();
+//        });
+        stream(rolesArray).forEach(role -> authorities.add(new SimpleGrantedAuthority(role)));
+
+        return authorities;
     }
 
     @Override
