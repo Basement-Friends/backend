@@ -7,6 +7,7 @@ import basement.friends.backend.service.definition.PictureService;
 import basement.friends.backend.service.definition.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -19,6 +20,7 @@ public class PictureController {
     private final PictureService pictureService;
     private final UserService userService;
 
+    @Secured("ROLE_USER")
     @PostMapping("/upload/{username}")
     public ResponseEntity<Picture> uploadMyProfilePicture(@RequestParam("file") MultipartFile file, @PathVariable String username) throws IOException {
         User user = userService.getByUsername(username);
