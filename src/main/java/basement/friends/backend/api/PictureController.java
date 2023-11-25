@@ -1,6 +1,7 @@
 package basement.friends.backend.api;
 
 import basement.friends.backend.model.DTO.request.UploadPictureRequest;
+import basement.friends.backend.model.DTO.response.EntityResponse;
 import basement.friends.backend.model.Picture;
 import basement.friends.backend.model.User;
 import basement.friends.backend.service.definition.PictureService;
@@ -20,12 +21,15 @@ public class PictureController {
     private final PictureService pictureService;
     private final UserService userService;
 
-    @Secured("ROLE_USER")
+    @Secured({"ROLE_USER"})
     @PostMapping("/upload/{username}")
-    public ResponseEntity<Picture> uploadMyProfilePicture(@RequestParam("file") MultipartFile file, @PathVariable String username) throws IOException {
+    public ResponseEntity<EntityResponse> uploadMyProfilePicture(@RequestParam("file") MultipartFile file, @PathVariable String username) throws IOException {
         User user = userService.getByUsername(username);
         Picture profilePicture = new UploadPictureRequest().profilePictureRequest(file, user);
-        return ResponseEntity.accepted().body(profilePicture);
+        return ResponseEntity.accepted()
+                .body(EntityResponse.builder()
+                        .message("Picture was uploaded successfully")
+                        .build());
     }
 
 }

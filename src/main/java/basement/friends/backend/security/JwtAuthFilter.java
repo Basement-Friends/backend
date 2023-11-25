@@ -54,7 +54,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 }
                 filterChain.doFilter(request, response);
             } catch (Exception exception) {
-                addErrorMessageToResponse(response, HttpStatus.FORBIDDEN.value(), "JWT expired");
+                addErrorMessageToResponse(response, HttpStatus.FORBIDDEN.value(), exception.getMessage());
             }
         } catch (Exception exception) {
             addErrorMessageToResponse(response, HttpStatus.NOT_ACCEPTABLE.value(), "Authorization Header not provided!");
