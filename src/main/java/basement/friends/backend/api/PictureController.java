@@ -20,12 +20,12 @@ public class PictureController {
     private final PictureService pictureService;
     private final UserService userService;
 
-    @Secured("ROLE_USER")
+    @Secured({"ROLE_USER"})
     @PostMapping("/upload/{username}")
     public ResponseEntity<Picture> uploadMyProfilePicture(@RequestParam("file") MultipartFile file, @PathVariable String username) throws IOException {
         User user = userService.getByUsername(username);
         Picture profilePicture = new UploadPictureRequest().profilePictureRequest(file, user);
-        return ResponseEntity.accepted().body(profilePicture);
+        return ResponseEntity.accepted().body(pictureService.savePicture(profilePicture));
     }
 
 }
