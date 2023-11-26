@@ -7,6 +7,8 @@ import java.util.List;
 public interface UserService {
     User getById(String id);
 
+    User getLoggedUser();
+
     User getByUsername(String username);
 
     User getByEmail(String email);

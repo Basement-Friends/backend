@@ -7,6 +7,8 @@ import basement.friends.backend.model.User;
 import basement.friends.backend.repository.UserRepository;
 import basement.friends.backend.service.definition.UserService;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,6 +22,18 @@ public class UserServiceImpl implements UserService {
     public User getById(String id) {
         return userRepository.findById(id)
                 .orElseThrow(UserIdNotFoundException::new);
+    }
+
+    @Override
+    public User getLoggedUser() {
+        Object principal = SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getPrincipal();
+        if (principal instanceof UserDetails) {
+            String username = ((UserDetails) principal).getUsername();
+            return this.getByUsername(username);
+        }
+        return null;
     }
 
     @Override
