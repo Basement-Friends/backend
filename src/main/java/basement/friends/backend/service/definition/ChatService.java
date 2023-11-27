@@ -1,9 +1,17 @@
 package basement.friends.backend.service.definition;
 
-public interface ChatService {
-    void createChat();
-    void addUser();
+import basement.friends.backend.model.Chat;
+import basement.friends.backend.model.User;
 
-    void sendMessage();
+import java.util.List;
+
+public interface ChatService {
+
+    Chat getById(String id);
+    List<Chat> getByUsers(User ... users);
+    Chat createChat(Chat chat);
+    Chat addUser(User user);
+
+    Chat sendMessage(Chat chat, String message);
     void deleteChat();
 }
