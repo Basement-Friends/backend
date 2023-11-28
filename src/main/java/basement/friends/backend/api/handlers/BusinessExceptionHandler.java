@@ -45,9 +45,9 @@ public class BusinessExceptionHandler {
         return new ErrorResponse(exception);
     }
 
-    @ExceptionHandler(NotValidPictureException.class)
+    @ExceptionHandler(ChatNotFoundException.class)
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
-    public ErrorResponse notValidPictureExceptionResponse(NotValidPictureException exception) {
+    public ErrorResponse chatNotFoundExceptionResponse(ChatNotFoundException exception) {
         return new ErrorResponse(exception);
     }
 
