@@ -63,7 +63,10 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
-    public void delete(String id, User ... user) {
+    public void deleteUsers(String id, User ... users) {
+        Chat chat = this.getById(id);
+        Arrays.stream(users).forEach(chat::deleteUserFromChat);
+        chatRepository.save(chat);
 
     }
 
