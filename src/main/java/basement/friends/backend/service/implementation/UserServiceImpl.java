@@ -11,7 +11,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
 @Service
 @AllArgsConstructor
 public class UserServiceImpl implements UserService {
@@ -51,6 +55,24 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> getAll() {
         return userRepository.findAll();
+    }
+
+    @Override
+    public Set<User> getUsersByUsernames(Set<String> usernames) {
+        Set<User> selectedUsers = new HashSet<>();
+        List<String> failedUsernames = new ArrayList<>();
+        usernames.forEach(username -> {
+            userRepository.getUserByUsername(username).ifPresentOrElse(
+                    selectedUsers::add,
+                    () -> failedUsernames.add(username)
+            );
+        });
+        if (failedUsernames.isEmpty()) {
+            return selectedUsers;
+        } else {
+            String joinedUsernames = String.join(", ", failedUsernames);
+            throw new UserIdNotFoundException(STR."Users: \{joinedUsernames} are not found!");
+        }
     }
 
     @Override

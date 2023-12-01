@@ -22,5 +22,5 @@ public interface ChatService {
 
     void addUsers(String id, User... users);
 
-    void delete(String id, User... user);
+    void deleteUsers(String id, User... user);
 }
