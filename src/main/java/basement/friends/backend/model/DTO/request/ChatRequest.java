@@ -2,11 +2,11 @@ package basement.friends.backend.model.DTO.request;
 
 import lombok.Data;
 
-import java.util.List;
+import java.util.Set;
 
 @Data
 public class ChatRequest {
-    List<String> usernames;
+    Set<String> usernames;
 
 
 }
