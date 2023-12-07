@@ -1,7 +1,6 @@
 package basement.friends.backend.model.DTO.response;
 
 import basement.friends.backend.model.Message;
-import basement.friends.backend.model.User;
 import lombok.Builder;
 import lombok.Data;
 
@@ -12,9 +11,11 @@ import java.util.Set;
 @Builder
 public class ChatResponse {
 
+    String chatId;
+
     String name;
 
-    Set<User> users;
+    Set<UserBasicResponse> users;
 
     List<Message> messages;
 

@@ -1,9 +1,12 @@
 package basement.friends.backend.service.implementation;
 
 import basement.friends.backend.exception.EmailNotFoundException;
+import basement.friends.backend.exception.GamerInfoNotFoundException;
 import basement.friends.backend.exception.UserIdNotFoundException;
 import basement.friends.backend.exception.UsernameNotFoundException;
+import basement.friends.backend.model.GamerInformation;
 import basement.friends.backend.model.User;
+import basement.friends.backend.repository.GamerRepository;
 import basement.friends.backend.repository.UserRepository;
 import basement.friends.backend.service.definition.UserService;
 import lombok.AllArgsConstructor;
@@ -20,7 +23,8 @@ import java.util.Set;
 @AllArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    UserRepository userRepository;
+    private final UserRepository userRepository;
+   private final GamerRepository extendedUserRepository;
 
     @Override
     public User getById(String id) {
@@ -88,5 +92,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean existsByEmail(String email) {
         return userRepository.existsByEmail(email);
+    }
+
+    @Override
+    public GamerInformation getExtendedUserInfo(String id) {
+        return extendedUserRepository.findById(id)
+                .orElseThrow(GamerInfoNotFoundException::new);
     }
 }

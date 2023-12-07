@@ -50,5 +50,10 @@ public class BusinessExceptionHandler {
     public ErrorResponse chatNotFoundExceptionResponse(ChatNotFoundException exception) {
         return new ErrorResponse(exception);
     }
+    @ExceptionHandler(GamerInfoNotFoundException.class)
+    @ResponseStatus(value = HttpStatus.NOT_FOUND)
+    public ErrorResponse gamerInfoNotFoundExceptionResponse(GamerInfoNotFoundException exception) {
+        return new ErrorResponse(exception);
+    }
 
 }

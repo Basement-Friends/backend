@@ -20,10 +20,14 @@ import static java.util.Arrays.stream;
 public class User implements UserDetails {
     @Id
     private String id;
+
     @Indexed(unique = true)
     private String username;
+
     private String password;
+
     private Collection<Role> roles;
+
     @Indexed(unique = true)
     private String email;
 
