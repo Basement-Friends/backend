@@ -4,6 +4,7 @@ import basement.friends.backend.model.Chat;
 import basement.friends.backend.model.DTO.request.ChatRequest;
 import basement.friends.backend.model.DTO.response.ChatResponse;
 import basement.friends.backend.model.DTO.response.EntityResponse;
+import basement.friends.backend.model.DTO.response.UserBasicResponse;
 import basement.friends.backend.model.User;
 import basement.friends.backend.service.definition.ChatFactory;
 import basement.friends.backend.service.definition.ChatService;
@@ -46,10 +47,17 @@ public class ChatController {
         User loggedUser = userService.getLoggedUser();
         Set<Chat> chats = chatService.getByUsers(loggedUser);
         Set<ChatResponse> chatResponses = new HashSet<>();
+
         chats.forEach(chat-> {
+            Set<UserBasicResponse> users = new HashSet<>();
+            chat.getUsers().forEach(user-> users.add(
+                    UserBasicResponse.builder()
+                            .username(user.getUsername())
+                            .build()
+            ));
             chatResponses.add(ChatResponse.builder()
                     .name(null)
-                    .users(chat.getUsers())
+                    .users(users)
                     .messages(chat.getMessages())
                     .build());
         });
