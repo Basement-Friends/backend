@@ -12,47 +12,53 @@ public class BusinessExceptionHandler {
 
     @ExceptionHandler(UsernameNotFoundException.class)
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
-    public ErrorResponse usernameNotFoundExceptionResponse(UsernameNotFoundException exception) {
+    public ErrorResponse getUsernameNotFoundExceptionResponse(UsernameNotFoundException exception) {
         return new ErrorResponse(exception);
     }
 
     @ExceptionHandler(UserIdNotFoundException.class)
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
-    public ErrorResponse userIdNotFoundExceptionResponse(UserIdNotFoundException exception) {
+    public ErrorResponse getUserIdNotFoundExceptionResponse(UserIdNotFoundException exception) {
         return new ErrorResponse(exception);
     }
 
     @ExceptionHandler(EmailNotFoundException.class)
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
-    public ErrorResponse emailNotFoundExceptionResponse(EmailNotFoundException exception) {
+    public ErrorResponse getEmailNotFoundExceptionResponse(EmailNotFoundException exception) {
         return new ErrorResponse(exception);
     }
 
     @ExceptionHandler(EmailExistsException.class)
     @ResponseStatus(value = HttpStatus.NOT_ACCEPTABLE)
-    public ErrorResponse emailExistsExceptionResponse(EmailExistsException exception) {
+    public ErrorResponse getEmailExistsExceptionResponse(EmailExistsException exception) {
         return new ErrorResponse(exception);
     }
     @ExceptionHandler(IncorrectPasswordException.class)
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-    public ErrorResponse incorrectPasswordExceptionResponse(IncorrectPasswordException exception) {
+    public ErrorResponse getIncorrectPasswordExceptionResponse(IncorrectPasswordException exception) {
         return new ErrorResponse(exception);
     }
 
     @ExceptionHandler(PictureNotFoundException.class)
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
-    public ErrorResponse pictureNotFoundExceptionResponse(PictureNotFoundException exception) {
+    public ErrorResponse getPictureNotFoundExceptionResponse(PictureNotFoundException exception) {
         return new ErrorResponse(exception);
     }
 
     @ExceptionHandler(ChatNotFoundException.class)
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
-    public ErrorResponse chatNotFoundExceptionResponse(ChatNotFoundException exception) {
+    public ErrorResponse getChatNotFoundExceptionResponse(ChatNotFoundException exception) {
         return new ErrorResponse(exception);
     }
     @ExceptionHandler(GamerInfoNotFoundException.class)
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
-    public ErrorResponse gamerInfoNotFoundExceptionResponse(GamerInfoNotFoundException exception) {
+    public ErrorResponse getGamerInfoNotFoundExceptionResponse(GamerInfoNotFoundException exception) {
+        return new ErrorResponse(exception);
+    }
+
+    @ExceptionHandler(UsernameAlreadyTakenException.class)
+    @ResponseStatus(value = HttpStatus.FORBIDDEN)
+    public ErrorResponse getUsernameAlreadyTakenExceptionResponse(UsernameAlreadyTakenException exception) {
         return new ErrorResponse(exception);
     }
 
