@@ -3,6 +3,7 @@ package basement.friends.backend.auth;
 
 import basement.friends.backend.exception.EmailExistsException;
 import basement.friends.backend.exception.IncorrectPasswordException;
+import basement.friends.backend.exception.UsernameAlreadyTakenException;
 import basement.friends.backend.exception.UsernameNotFoundException;
 import basement.friends.backend.model.GamerInformation;
 import basement.friends.backend.model.User;
@@ -27,6 +28,9 @@ public class AuthService {
     public AuthenticationResponse register(RegisterRequest request) {
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new EmailExistsException();
+        }
+        if (userRepository.existsByUsername(request.getUsername())) {
+            throw new UsernameAlreadyTakenException();
         }
         User user = User.builder()
                 .username(request.getUsername())
