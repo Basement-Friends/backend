@@ -26,12 +26,7 @@ public class AuthService {
     private final JwtService jwtService;
 
     public AuthenticationResponse register(RegisterRequest request) {
-        if (userRepository.existsByEmail(request.getEmail())) {
-            throw new EmailExistsException();
-        }
-        if (userRepository.existsByUsername(request.getUsername())) {
-            throw new UsernameAlreadyTakenException();
-        }
+        verifyRequestCorrectness(request);
         User user = User.builder()
                 .username(request.getUsername())
                 .email(request.getEmail())
@@ -43,6 +38,7 @@ public class AuthService {
                 .id(user.getId())
                 .firstName(request.getFirstName())
                 .lastName(request.getFirstName())
+                .nickName(request.getNickname())
                 .build();
         gamerRepository.save(gamerInformation);
         String jwtToken = jwtService.generateToken(user);
@@ -63,5 +59,13 @@ public class AuthService {
         return AuthenticationResponse.builder()
                 .token(jwtToken)
                 .build();
+    }
+    private void verifyRequestCorrectness(RegisterRequest request) {
+        if (userRepository.existsByEmail(request.getEmail())) {
+            throw new EmailExistsException();
+        }
+        if (userRepository.existsByUsername(request.getUsername())) {
+            throw new UsernameAlreadyTakenException();
+        }
     }
 }
