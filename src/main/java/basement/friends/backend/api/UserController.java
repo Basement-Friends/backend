@@ -1,7 +1,7 @@
 package basement.friends.backend.api;
 
 import basement.friends.backend.auth.AuthService;
-import basement.friends.backend.auth.RegisterRequest;
+import basement.friends.backend.model.DTO.request.BasicUserRequest;
 import basement.friends.backend.model.DTO.response.EntityResponse;
 import basement.friends.backend.model.User;
 import basement.friends.backend.service.definition.UserService;
@@ -36,11 +36,10 @@ public class UserController {
 
     @Secured("ROLE_ADMIN")
     @PostMapping("/import")
-    public ResponseEntity<EntityResponse> importUsers(@RequestBody Set<RegisterRequest> requests) {
-        requests.forEach(authService::register);
+    public ResponseEntity<EntityResponse> importUsers(@RequestBody Set<BasicUserRequest> requests) {
         return ResponseEntity.accepted()
                 .body(EntityResponse.builder()
-                        .message("Users imported successfully")
+                        .message(authService.importUsers(requests))
                         .build());
     }
 
