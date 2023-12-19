@@ -8,6 +8,7 @@ import basement.friends.backend.service.definition.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,7 +23,7 @@ public class UserController {
     private final UserService userService;
     private final AuthService authService;
 
-    @Secured("ROLE_ADMIN")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @GetMapping("/all")
     List<User> getAllStudents(@RequestParam Map<String, String> filters) {
         return userService.getAll();
