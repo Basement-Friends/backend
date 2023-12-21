@@ -12,7 +12,6 @@ import basement.friends.backend.service.definition.UserService;
 import basement.friends.backend.service.implementation.ChatFactoryImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,7 +25,7 @@ public class ChatController {
     private final ChatService chatService;
     private final UserService userService;
 
-    @PreAuthorize("hasAuthority('ROLE_USER')")
+    @PreAuthorize("hasAuthority({'ROLE_USER', 'ROLE_ADMIN'})")
     @PostMapping("/create")
     public ResponseEntity<EntityResponse> postChat(@RequestBody ChatRequest chatRequest) {
         ChatFactory chatFactory = new ChatFactoryImpl();
@@ -42,7 +41,7 @@ public class ChatController {
 
     }
 
-    @Secured({"ROLE_USER"})
+    @PreAuthorize("hasAuthority({'ROLE_USER', 'ROLE_ADMIN'})")
     @GetMapping("/myChats")
     public ResponseEntity<Set<ChatResponse>> getMyChats(@RequestBody ChatRequest chatRequest) {
         User loggedUser = userService.getLoggedUser();

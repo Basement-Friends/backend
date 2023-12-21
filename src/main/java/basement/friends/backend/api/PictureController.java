@@ -11,7 +11,6 @@ import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,7 +23,7 @@ public class PictureController {
     private final PictureFactory pictureFactory;
     private final UserService userService;
 
-    @Secured({"ROLE_USER"})
+    @PreAuthorize("hasAuthority({'ROLE_USER', 'ROLE_ADMIN'})")
     @PostMapping("/upload")
     public ResponseEntity<EntityResponse> uploadMyProfilePicture(@RequestParam("file") MultipartFile file) {
         User user = userService.getLoggedUser();
@@ -36,7 +35,7 @@ public class PictureController {
                         .build());
     }
 
-    @Secured("ROLE_USER")
+    @PreAuthorize("hasAuthority({'ROLE_USER', 'ROLE_ADMIN'})")
     @GetMapping(value = "/view", produces = MediaType.IMAGE_JPEG_VALUE)
     public ResponseEntity<ByteArrayResource> viewPicture() {
         User loggedUser = userService.getLoggedUser();
