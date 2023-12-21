@@ -7,7 +7,6 @@ import basement.friends.backend.model.User;
 import basement.friends.backend.service.definition.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,13 +28,13 @@ public class UserController {
         return userService.getAll();
     }
 
-    @Secured("ROLE_USER")
+    @PreAuthorize("hasAuthority({'ROLE_USER', 'ROLE_ADMIN'})")
     @GetMapping("/{username}")
     Optional<User> getStudentByUsername(@PathVariable String username) {
         return Optional.ofNullable(userService.getByUsername(username));
     }
 
-    @Secured("ROLE_ADMIN")
+    @PreAuthorize("hasAuthority({'ROLE_ADMIN'})")
     @PostMapping("/import")
     public ResponseEntity<EntityResponse> importUsers(@RequestBody Set<BasicUserRequest> requests) {
         return ResponseEntity.accepted()
