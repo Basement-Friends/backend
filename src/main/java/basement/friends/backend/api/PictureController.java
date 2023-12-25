@@ -23,7 +23,7 @@ public class PictureController {
     private final PictureFactory pictureFactory;
     private final UserService userService;
 
-    @PreAuthorize("hasAuthority({'ROLE_USER', 'ROLE_ADMIN'})")
+    @PreAuthorize("permitAll()")
     @PostMapping("/upload")
     public ResponseEntity<EntityResponse> uploadMyProfilePicture(@RequestParam("file") MultipartFile file) {
         User user = userService.getLoggedUser();
@@ -35,7 +35,7 @@ public class PictureController {
                         .build());
     }
 
-    @PreAuthorize("hasAuthority({'ROLE_USER', 'ROLE_ADMIN'})")
+    @PreAuthorize("permitAll()")
     @GetMapping(value = "/view", produces = MediaType.IMAGE_JPEG_VALUE)
     public ResponseEntity<ByteArrayResource> viewPicture() {
         User loggedUser = userService.getLoggedUser();
