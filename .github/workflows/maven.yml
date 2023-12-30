@@ -2,9 +2,9 @@ name: Basement Friends backend App
 
 on:
   push:
-    branches: [ "main, main_copy" ]
+    branches: [ "main" ]
   pull_request:
-    branches: [ "main, main_copy" ]
+    branches: [ "main" ]
 
 jobs:
   build:
