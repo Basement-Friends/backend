@@ -43,7 +43,7 @@ public class AuthService {
                 .id(user.getId())
                 .firstName(request.getFirstName())
                 .lastName(request.getFirstName())
-                .nickName(request.getNickname())
+                .nickName(request.getNickname() == null ? request.getUsername() : request.getNickname())
                 .build();
         gamerRepository.save(gamerInformation);
         String jwtToken = jwtService.generateToken(user);
