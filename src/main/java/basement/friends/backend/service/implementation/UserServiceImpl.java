@@ -90,7 +90,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteByUsername(String username) {
-        User user = userRepository.findById(username)
+        User user = userRepository.getUserByUsername(username)
                 .orElseThrow(UserIdNotFoundException::new);
         userRepository.delete(user);
         extendedUserRepository.deleteById(user.getId());
