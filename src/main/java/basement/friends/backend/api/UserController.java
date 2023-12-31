@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
+@CrossOrigin
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("api/user")
@@ -22,16 +23,25 @@ public class UserController {
     private final UserService userService;
     private final AuthService authService;
 
+
+
+
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @GetMapping("/all")
-    List<User> getAllStudents(@RequestParam Map<String, String> filters) {
+    List<User> getAllUsers(@RequestParam Map<String, String> filters) {
         return userService.getAll();
     }
 
-    @PreAuthorize("hasAuthority({'ROLE_USER', 'ROLE_ADMIN'})")
+    @PreAuthorize("hasAuthority({'ROLE_ADMIN'})")
     @GetMapping("/{username}")
-    Optional<User> getStudentByUsername(@PathVariable String username) {
+    Optional<User> getUserByUsername(@PathVariable String username) {
         return Optional.ofNullable(userService.getByUsername(username));
+    }
+
+    @PreAuthorize("hasAuthority({'ROLE_USER'})")
+    @GetMapping()
+    Optional<User> getLoggedUser() {
+        return Optional.ofNullable(userService.getLoggedUser());
     }
 
     @PreAuthorize("hasAuthority({'ROLE_ADMIN'})")
