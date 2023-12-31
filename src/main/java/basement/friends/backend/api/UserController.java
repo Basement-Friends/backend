@@ -24,8 +24,6 @@ public class UserController {
     private final AuthService authService;
 
 
-
-
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @GetMapping("/all")
     List<User> getAllUsers(@RequestParam Map<String, String> filters) {
@@ -51,6 +49,12 @@ public class UserController {
                 .body(EntityResponse.builder()
                         .message(authService.importUsers(requests))
                         .build());
+    }
+
+    @PreAuthorize("hasAuthority({'ROLE_ADMIN'})")
+    @DeleteMapping("/{username}")
+    void deleteUserByUsername(@PathVariable String username) {
+        userService.deleteByUsername(username);
     }
 
 }

@@ -1,12 +1,11 @@
 package basement.friends.backend.service.implementation;
 
-import basement.friends.backend.exception.EmailNotFoundException;
-import basement.friends.backend.exception.GamerInfoNotFoundException;
-import basement.friends.backend.exception.UserIdNotFoundException;
-import basement.friends.backend.exception.UsernameNotFoundException;
+import basement.friends.backend.exception.*;
 import basement.friends.backend.model.GamerInformation;
+import basement.friends.backend.model.Picture;
 import basement.friends.backend.model.User;
 import basement.friends.backend.repository.GamerRepository;
+import basement.friends.backend.repository.PictureRepository;
 import basement.friends.backend.repository.UserRepository;
 import basement.friends.backend.service.definition.UserService;
 import lombok.AllArgsConstructor;
@@ -22,9 +21,9 @@ import java.util.Set;
 @Service
 @AllArgsConstructor
 public class UserServiceImpl implements UserService {
-
     private final UserRepository userRepository;
-   private final GamerRepository extendedUserRepository;
+    private final GamerRepository extendedUserRepository;
+    private final PictureRepository pictureRepository;
 
     @Override
     public User getById(String id) {
@@ -75,7 +74,7 @@ public class UserServiceImpl implements UserService {
             return selectedUsers;
         } else {
             String joinedUsernames = String.join(", ", failedUsernames);
-            throw new UserIdNotFoundException(STR."Users: \{joinedUsernames} are not found!");
+            throw new UserIdNotFoundException(STR. "Users: \{ joinedUsernames } are not found!" );
         }
     }
 
@@ -87,6 +86,16 @@ public class UserServiceImpl implements UserService {
     @Override
     public void delete(String id) {
         userRepository.deleteById(id);
+    }
+
+    @Override
+    public void deleteByUsername(String username) {
+        User user = userRepository.findById(username)
+                .orElseThrow(UserIdNotFoundException::new);
+        userRepository.delete(user);
+        extendedUserRepository.deleteById(user.getId());
+        Picture picture = pictureRepository.getByUser_Username(username).orElseThrow(PictureNotFoundException::new);
+        pictureRepository.delete(picture);
     }
 
     @Override

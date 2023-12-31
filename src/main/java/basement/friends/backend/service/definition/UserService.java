@@ -23,6 +23,8 @@ public interface UserService {
 
     void delete(String id);
 
+    void deleteByUsername(String username);
+
     boolean existsByEmail(String email);
 
     GamerInformation getExtendedUserInfo(String id);
