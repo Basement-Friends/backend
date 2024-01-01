@@ -1,6 +1,9 @@
 package basement.friends.backend.service.implementation;
 
-import basement.friends.backend.exception.*;
+import basement.friends.backend.exception.EmailNotFoundException;
+import basement.friends.backend.exception.GamerInfoNotFoundException;
+import basement.friends.backend.exception.UserIdNotFoundException;
+import basement.friends.backend.exception.UsernameNotFoundException;
 import basement.friends.backend.model.GamerInformation;
 import basement.friends.backend.model.Picture;
 import basement.friends.backend.model.User;
@@ -94,7 +97,7 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(UserIdNotFoundException::new);
         userRepository.delete(user);
         extendedUserRepository.deleteById(user.getId());
-        Picture picture = pictureRepository.getByUser_Username(username).orElseThrow(PictureNotFoundException::new);
+        Picture picture = pictureRepository.getByUser_Username(username).orElse(null);
         pictureRepository.delete(picture);
     }
 

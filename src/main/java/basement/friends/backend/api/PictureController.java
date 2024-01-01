@@ -49,9 +49,9 @@ public class PictureController {
 
 
     @PreAuthorize("permitAll()")
-    @GetMapping(value = "/{id}", produces = MediaType.IMAGE_JPEG_VALUE)
-    public ResponseEntity<ByteArrayResource> getPicture(@PathVariable String id) {
-        Picture picture = pictureService.getPicture(id);
+    @GetMapping(value = "/{username}", produces = MediaType.IMAGE_JPEG_VALUE)
+    public ResponseEntity<ByteArrayResource> getPicture(@PathVariable String username) {
+        Picture picture = pictureService.getPictureByUsername(username);
         ByteArrayResource resource = new ByteArrayResource(picture.getContent());
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + picture.getName() + "\"")
