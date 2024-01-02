@@ -11,9 +11,10 @@ import basement.friends.backend.service.definition.ChatService;
 import basement.friends.backend.service.definition.UserService;
 import basement.friends.backend.service.implementation.ChatFactoryImpl;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -65,6 +66,29 @@ public class ChatController {
         return ResponseEntity.accepted()
                 .body(chatResponses);
 
+    }
+
+    @PreAuthorize("hasAuthority({'ROLE_USER'})")
+    @GetMapping("/message")
+    public ResponseEntity<String> checkIfMessageIsCorrect() {
+        try {
+
+            String uri="http://localhost:12345/isToxic";
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+
+            RestTemplate restTemplate = new RestTemplate();
+
+            String body = "{\"message\": \"some fikusny message\"}";
+
+            ResponseEntity<String> result = restTemplate.postForEntity(uri, new HttpEntity<>(body, headers), String.class);
+
+            return new ResponseEntity<>( result.getStatusCodeValue() == 200 ? "Mesagge is ok" : "Message is not ok", HttpStatus.OK);
+
+        }catch (Exception e){
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body("Error!, Please try again");
+        }
     }
 
 
