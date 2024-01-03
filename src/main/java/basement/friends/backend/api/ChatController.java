@@ -1,7 +1,9 @@
 package basement.friends.backend.api;
 
+import basement.friends.backend.integration.ToxicMessageIntegrator;
 import basement.friends.backend.model.Chat;
 import basement.friends.backend.model.DTO.request.ChatRequest;
+import basement.friends.backend.model.DTO.request.MessageRequest;
 import basement.friends.backend.model.DTO.response.ChatResponse;
 import basement.friends.backend.model.DTO.response.EntityResponse;
 import basement.friends.backend.model.DTO.response.UserBasicResponse;
@@ -11,10 +13,10 @@ import basement.friends.backend.service.definition.ChatService;
 import basement.friends.backend.service.definition.UserService;
 import basement.friends.backend.service.implementation.ChatFactoryImpl;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -26,6 +28,7 @@ import java.util.Set;
 public class ChatController {
     private final ChatService chatService;
     private final UserService userService;
+    private final ToxicMessageIntegrator messageIntegrator;
 
     @PreAuthorize("hasAuthority({'ROLE_USER', 'ROLE_ADMIN'})")
     @PostMapping("/create")
@@ -50,9 +53,9 @@ public class ChatController {
         Set<Chat> chats = chatService.getByUsers(loggedUser);
         Set<ChatResponse> chatResponses = new HashSet<>();
 
-        chats.forEach(chat-> {
+        chats.forEach(chat -> {
             Set<UserBasicResponse> users = new HashSet<>();
-            chat.getUsers().forEach(user-> users.add(
+            chat.getUsers().forEach(user -> users.add(
                     UserBasicResponse.builder()
                             .username(user.getUsername())
                             .build()
@@ -69,28 +72,21 @@ public class ChatController {
     }
 
     @PreAuthorize("hasAuthority({'ROLE_USER'})")
-    @GetMapping("/message")
-    public ResponseEntity<String> checkIfMessageIsCorrect() {
-        try {
-
-            String uri="http://localhost:12345/isToxic";
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_JSON);
-
-            RestTemplate restTemplate = new RestTemplate();
-
-            String body = "{\"message\": \"some fikusny message\"}";
-
-            ResponseEntity<String> result = restTemplate.postForEntity(uri, new HttpEntity<>(body, headers), String.class);
-
-            return new ResponseEntity<>( result.getStatusCodeValue() == 200 ? "Mesagge is ok" : "Message is not ok", HttpStatus.OK);
-
-        }catch (Exception e){
-            e.printStackTrace();
-            return ResponseEntity.badRequest().body("Error!, Please try again");
+    @PostMapping("/message")
+    public ResponseEntity<EntityResponse> sendMassage(@RequestBody MessageRequest messageRequest) {
+        if (!messageIntegrator.isMessageToxic(messageRequest)) {
+            return ResponseEntity.accepted()
+                    .body(EntityResponse.builder()
+                            .message("Message was send")
+                            .build());
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE)
+                    .body(EntityResponse.builder()
+                            .message("Message possibly contains questionable content")
+                            .build());
         }
-    }
 
+    }
 
 
 }

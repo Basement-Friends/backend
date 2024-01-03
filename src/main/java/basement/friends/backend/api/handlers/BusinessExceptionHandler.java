@@ -62,4 +62,16 @@ public class BusinessExceptionHandler {
         return new ErrorResponse(exception);
     }
 
+    @ExceptionHandler(NotValidPictureException.class)
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    public ErrorResponse getNotValidPictureExceptionResponse(NotValidPictureException exception) {
+        return new ErrorResponse(exception);
+    }
+
+    @ExceptionHandler(FailedToConnectException.class)
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    public ErrorResponse getFailedToConnectExceptionResponse(FailedToConnectException exception) {
+        return new ErrorResponse(exception);
+    }
+
 }

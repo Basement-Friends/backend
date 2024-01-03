@@ -4,5 +4,9 @@ public enum Gender {
     MALE,
     FEMALE,
     NON_BINARY,
-    OTHER
+    OTHER;
+
+    public String getName() {
+        return this.name();
+    }
 }
