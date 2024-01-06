@@ -34,8 +34,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         final String authHeader = request.getHeader("Authorization");
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-//            filterChain.doFilter(request, response);
-            addErrorMessageToResponse(response, HttpStatus.NOT_ACCEPTABLE.value(), "Authorization Header not provided!");
+            filterChain.doFilter(request, response);
+//            addErrorMessageToResponse(response, HttpStatus.NOT_ACCEPTABLE.value(), "Authorization Header not provided!");
             return;
         }
         try {

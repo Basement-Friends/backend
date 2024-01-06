@@ -1,5 +1,6 @@
 package basement.friends.backend.api;
 
+import basement.friends.backend.integration.ProfilePictureValidator;
 import basement.friends.backend.model.DTO.response.EntityResponse;
 import basement.friends.backend.model.Picture;
 import basement.friends.backend.model.User;
@@ -15,6 +16,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+
 @CrossOrigin
 @RestController
 @RequiredArgsConstructor
@@ -26,10 +29,12 @@ public class PictureController {
 
     @PreAuthorize("permitAll()")
     @PostMapping("/upload")
-    public ResponseEntity<EntityResponse> uploadMyProfilePicture(@RequestParam("file") MultipartFile file) {
+    public ResponseEntity<EntityResponse> uploadMyProfilePicture(@RequestParam("file") MultipartFile file) throws IOException {
         User user = userService.getLoggedUser();
         Picture profilePicture = pictureFactory.createFromFile(file, user);
         pictureService.savePicture(profilePicture);
+        ProfilePictureValidator profilePictureValidator = new ProfilePictureValidator();
+        profilePictureValidator.isPictureValid(file);
         return ResponseEntity.accepted()
                 .body(EntityResponse.builder()
                         .message("Picture was uploaded successfully")

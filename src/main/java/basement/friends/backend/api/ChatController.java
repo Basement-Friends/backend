@@ -1,6 +1,6 @@
 package basement.friends.backend.api;
 
-import basement.friends.backend.integration.ToxicMessageIntegrator;
+import basement.friends.backend.integration.ToxicMessageValidator;
 import basement.friends.backend.model.Chat;
 import basement.friends.backend.model.DTO.request.ChatRequest;
 import basement.friends.backend.model.DTO.request.MessageRequest;
@@ -28,7 +28,7 @@ import java.util.Set;
 public class ChatController {
     private final ChatService chatService;
     private final UserService userService;
-    private final ToxicMessageIntegrator messageIntegrator;
+    private final ToxicMessageValidator messageIntegrator;
 
     @PreAuthorize("hasAuthority({'ROLE_USER', 'ROLE_ADMIN'})")
     @PostMapping("/create")

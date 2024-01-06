@@ -16,7 +16,7 @@ import java.util.Objects;
 
 @Component
 @RequiredArgsConstructor
-public class ToxicMessageIntegrator {
+public class ToxicMessageValidator {
     @Value("${model.toxic-msg-validator.url}")
     String URI;
     RestTemplate restTemplate = new RestTemplate();
