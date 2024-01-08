@@ -29,7 +29,4 @@ public interface UserService {
 
     GamerInformation getExtendedUserInfo(String id);
 
-    void
-
-
 }

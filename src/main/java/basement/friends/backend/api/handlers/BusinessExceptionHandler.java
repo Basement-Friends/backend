@@ -82,4 +82,10 @@ public class BusinessExceptionHandler {
         return new ErrorResponse(exception);
     }
 
+    @ExceptionHandler(RequestNotFoundException.class)
+    @ResponseStatus(value = HttpStatus.NOT_FOUND)
+    public ErrorResponse getRequestNotFoundExceptionResponse(RequestNotFoundException exception) {
+        return new ErrorResponse(exception);
+    }
+
 }
