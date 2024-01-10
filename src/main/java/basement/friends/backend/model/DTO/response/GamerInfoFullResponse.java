@@ -1,4 +1,4 @@
-package basement.friends.backend.model.response;
+package basement.friends.backend.model.DTO.response;
 
 import basement.friends.backend.model.Rank;
 import basement.friends.backend.model.UserGameRecord;
@@ -11,11 +11,13 @@ import java.util.Set;
 
 @Data
 public class GamerInfoFullResponse {
+
     private String firstName;
+
     private String lastName;
 
     @Indexed(unique = true)
-    private String nickName;
+    private String nickname;
 
     private Gender gender;
 

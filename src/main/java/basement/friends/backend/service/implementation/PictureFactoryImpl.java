@@ -1,21 +1,18 @@
-package basement.friends.backend.model.request;
+package basement.friends.backend.service.implementation;
 
 import basement.friends.backend.exception.NotValidPictureException;
 import basement.friends.backend.model.Picture;
 import basement.friends.backend.model.User;
+import basement.friends.backend.service.definition.PictureFactory;
 import jakarta.activation.MimetypesFileTypeMap;
-import lombok.Builder;
-import lombok.Data;
+import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
 
-@Data
-@Builder
-public class UploadPictureRequest {
-    MultipartFile file;
-    String username;
+@Service
+public class PictureFactoryImpl implements PictureFactory {
 
     private boolean checkIfValidPicture(MultipartFile file) {
         String filepath = file.getOriginalFilename();
@@ -25,20 +22,22 @@ public class UploadPictureRequest {
         String type = mimetype.split("/")[0];
         return type.equals("image");
     }
-
-    public Picture profilePictureRequest(MultipartFile file, User owner) throws IOException {
+    @Override
+    public Picture createFromFile(MultipartFile file, User owner) {
         if (!checkIfValidPicture(file))
             throw new NotValidPictureException();
         else {
-            return Picture.builder()
-                    .user(owner)
-                    .id(owner.getId())
-                    .content(file.getBytes())
-                    .name(file.getName())
-                    .size(file.getSize())
-                    .build();
+            try {
+                return Picture.builder()
+                        .user(owner)
+                        .id(owner.getId())
+                        .content(file.getBytes())
+                        .name(file.getName())
+                        .size(file.getSize())
+                        .build();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
-
     }
-
 }

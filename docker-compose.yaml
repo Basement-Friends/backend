@@ -9,8 +9,8 @@ services:
       - "27017:27017"
     volumes:
       - data:/data
-    networks:
-      - basement-friends_network
+#    networks:
+#      - basement-friends_network
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: root
@@ -22,8 +22,8 @@ services:
       - mongodb
     depends_on:
       - mongodb
-    networks:
-      - basement_friends_network
+#    networks:
+#      - basement_friends_network
     restart: always
     ports:
       - "8081:8081"
@@ -44,8 +44,8 @@ services:
     container_name: bs_backend_app
     links:
       - mongodb
-    networks:
-      - basement-friends_network
+#    networks:
+#      - basement-friends_network
     ports:
       - "8080:8080"
     expose:

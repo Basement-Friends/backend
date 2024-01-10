@@ -1,11 +1,15 @@
 package basement.friends.backend.service.definition;
 
+import basement.friends.backend.model.GamerInformation;
 import basement.friends.backend.model.User;
 
 import java.util.List;
+import java.util.Set;
 
 public interface UserService {
     User getById(String id);
+
+    User getLoggedUser();
 
     User getByUsername(String username);
 
@@ -13,9 +17,16 @@ public interface UserService {
 
     List<User> getAll();
 
+    Set<User> getUsersByUsernames(Set<String> usernames);
+
     User save(User user);
 
     void delete(String id);
 
+    void deleteByUsername(String username);
+
     boolean existsByEmail(String email);
+
+    GamerInformation getExtendedUserInfo(String id);
+
 }

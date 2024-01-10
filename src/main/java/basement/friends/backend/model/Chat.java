@@ -16,6 +16,18 @@ public class Chat {
     private String id;
 
     Set<User> users;
+
     List<Message> messages;
+
+    public void addMessage(Message message) {
+        this.messages.add(message);
+    }
+
+    public void addUsers(User user) {
+        users.add(user);
+    }
+    public void deleteUserFromChat(User user) {
+        users.remove(user);
+    }
 
 }
