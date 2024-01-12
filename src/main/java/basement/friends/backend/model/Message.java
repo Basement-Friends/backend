@@ -17,4 +17,6 @@ public class Message {
     private String message;
 
     private Date postTime;
+
+    boolean possibleToxicity;
 }
