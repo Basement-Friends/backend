@@ -7,6 +7,7 @@ import basement.friends.backend.model.DTO.request.MessageRequest;
 import basement.friends.backend.model.DTO.response.ChatResponse;
 import basement.friends.backend.model.DTO.response.EntityResponse;
 import basement.friends.backend.model.DTO.response.UserBasicResponse;
+import basement.friends.backend.model.Message;
 import basement.friends.backend.model.User;
 import basement.friends.backend.service.definition.ChatFactory;
 import basement.friends.backend.service.definition.ChatService;
@@ -18,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -34,15 +36,9 @@ public class ChatController {
     @PostMapping("/create")
     public ResponseEntity<EntityResponse> postChat(@RequestBody ChatRequest chatRequest) {
         ChatFactory chatFactory = new ChatFactoryImpl();
-        Chat chat = chatFactory.createFromRequest(
-                userService.getUsersByUsernames(
-                        chatRequest.getUsernames()
-                ));
+        Chat chat = chatFactory.createFromRequest(userService.getUsersByUsernames(chatRequest.getUsernames()));
         chatService.createChat(chat);
-        return ResponseEntity.accepted()
-                .body(EntityResponse.builder()
-                        .message("Chat was created")
-                        .build());
+        return ResponseEntity.accepted().body(EntityResponse.builder().message("Chat was created").build());
 
     }
 
@@ -55,38 +51,29 @@ public class ChatController {
 
         chats.forEach(chat -> {
             Set<UserBasicResponse> users = new HashSet<>();
-            chat.getUsers().forEach(user -> users.add(
-                    UserBasicResponse.builder()
-                            .username(user.getUsername())
-                            .build()
-            ));
-            chatResponses.add(ChatResponse.builder()
-                    .name(null)
-                    .users(users)
-                    .messages(chat.getMessages())
-                    .build());
+            chat.getUsers().forEach(user -> users.add(UserBasicResponse.builder().username(user.getUsername()).build()));
+            chatResponses.add(ChatResponse.builder().name(null).users(users).messages(chat.getMessages()).build());
         });
-        return ResponseEntity.accepted()
-                .body(chatResponses);
+        return ResponseEntity.accepted().body(chatResponses);
 
     }
 
     @PreAuthorize("hasAuthority({'ROLE_USER'})")
-    @PostMapping("/message")
-    public ResponseEntity<EntityResponse> sendMassage(@RequestBody MessageRequest messageRequest) {
+    @PostMapping("/{id}/sendMessage")
+    public ResponseEntity<EntityResponse> sendMessage(@RequestBody MessageRequest messageRequest, @PathVariable String id) {
         if (!messageIntegrator.isMessageToxic(messageRequest)) {
-            return ResponseEntity.accepted()
-                    .body(EntityResponse.builder()
-                            .message("Message was send")
-                            .build());
+            chatService.sendMessage(id, Message.builder().sender(userService.getLoggedUser()).message(messageRequest.getMsgText()).possibleToxicity(false).postTime(new Date()).build());
+            return ResponseEntity.accepted().body(EntityResponse.builder().message("Message was send").build());
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE)
-                    .body(EntityResponse.builder()
-                            .message("Message possibly contains questionable content")
-                            .build());
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(EntityResponse.builder().message("Message possibly contains questionable content").build());
         }
-
     }
 
+    @PreAuthorize("hasAuthority({'ROLE_USER'})")
+    @PostMapping("/{id}/sendToxicMessage")
+    public ResponseEntity<EntityResponse> sendToxicMessage(@RequestBody MessageRequest messageRequest, @PathVariable String id) {
+        chatService.sendMessage(id, Message.builder().sender(userService.getLoggedUser()).message(messageRequest.getMsgText()).possibleToxicity(true).postTime(new Date()).build());
+        return ResponseEntity.accepted().body(EntityResponse.builder().message("Message was send").build());
 
+    }
 }
