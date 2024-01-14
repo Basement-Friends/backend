@@ -16,10 +16,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 @AllArgsConstructor
@@ -98,7 +95,7 @@ public class UserServiceImpl implements UserService {
         userRepository.delete(user);
         extendedUserRepository.deleteById(user.getId());
         Picture picture = pictureRepository.getByUser_Username(username).orElse(null);
-        pictureRepository.delete(picture);
+        pictureRepository.delete(Objects.requireNonNull(picture));
     }
 
     @Override
@@ -110,5 +107,10 @@ public class UserServiceImpl implements UserService {
     public GamerInformation getExtendedUserInfo(String id) {
         return extendedUserRepository.findById(id)
                 .orElseThrow(GamerInfoNotFoundException::new);
+    }
+
+    @Override
+    public Set<GamerInformation> getExtendedUserInfos() {
+        return new HashSet<>(extendedUserRepository.findAll());
     }
 }

@@ -29,4 +29,6 @@ public interface UserService {
 
     GamerInformation getExtendedUserInfo(String id);
 
+    Set<GamerInformation> getExtendedUserInfos();
+
 }
