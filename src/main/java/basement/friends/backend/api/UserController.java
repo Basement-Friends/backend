@@ -3,6 +3,7 @@ package basement.friends.backend.api;
 import basement.friends.backend.auth.AuthService;
 import basement.friends.backend.model.DTO.request.BasicUserRequest;
 import basement.friends.backend.model.DTO.response.EntityResponse;
+import basement.friends.backend.model.GamerInformation;
 import basement.friends.backend.model.User;
 import basement.friends.backend.service.definition.UserService;
 import lombok.RequiredArgsConstructor;
@@ -34,6 +35,19 @@ public class UserController {
     @GetMapping("/{username}")
     Optional<User> getUserByUsername(@PathVariable String username) {
         return Optional.ofNullable(userService.getByUsername(username));
+    }
+
+    @PreAuthorize("permitAll()")
+    @GetMapping("/info/{username}")
+    Optional<GamerInformation> getUserInfo(@PathVariable String username) {
+        return Optional.ofNullable(userService.getExtendedUserInfo(username));
+
+    }
+    @PreAuthorize("permitAll()")
+    @GetMapping("/info/all")
+    Set<GamerInformation> getUserInfo() {
+        return userService.getExtendedUserInfos();
+
     }
 
     @PreAuthorize("hasAuthority({'ROLE_USER'})")
