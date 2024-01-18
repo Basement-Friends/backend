@@ -4,6 +4,7 @@ import basement.friends.backend.exception.EmailNotFoundException;
 import basement.friends.backend.exception.GamerInfoNotFoundException;
 import basement.friends.backend.exception.UserIdNotFoundException;
 import basement.friends.backend.exception.UsernameNotFoundException;
+import basement.friends.backend.model.DTO.request.ChangePasswordRequest;
 import basement.friends.backend.model.GamerInformation;
 import basement.friends.backend.model.Picture;
 import basement.friends.backend.model.User;
@@ -14,6 +15,7 @@ import basement.friends.backend.service.definition.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -24,6 +26,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final GamerRepository extendedUserRepository;
     private final PictureRepository pictureRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public User getById(String id) {
@@ -112,5 +115,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public Set<GamerInformation> getExtendedUserInfos() {
         return new HashSet<>(extendedUserRepository.findAll());
+    }
+
+    @Override
+    public void changePassword(String username, ChangePasswordRequest passwordRequest) {
+        //TODO implement password checkout
+        User user = userRepository.getUserByUsername(username).orElseThrow(UserIdNotFoundException::new);
+        user.setPassword(passwordEncoder.encode(passwordRequest.getNewPassword()));
+        userRepository.save(user);
     }
 }

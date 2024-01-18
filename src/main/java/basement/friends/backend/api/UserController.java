@@ -2,6 +2,7 @@ package basement.friends.backend.api;
 
 import basement.friends.backend.auth.AuthService;
 import basement.friends.backend.model.DTO.request.BasicUserRequest;
+import basement.friends.backend.model.DTO.request.ChangePasswordRequest;
 import basement.friends.backend.model.DTO.request.GamerInformationRequest;
 import basement.friends.backend.model.DTO.response.EntityResponse;
 import basement.friends.backend.model.GamerInformation;
@@ -76,6 +77,24 @@ public class UserController {
     @DeleteMapping("/{username}")
     void deleteUserByUsername(@PathVariable String username) {
         userService.deleteByUsername(username);
+    }
+
+    //TODO
+    @PreAuthorize("permitAll()")
+    @PutMapping("/changePassword")
+    public ResponseEntity<EntityResponse> changePassword(@RequestBody ChangePasswordRequest passwordRequest) {
+        userService.changePassword(userService.getLoggedUser().getUsername(), passwordRequest);
+        return ResponseEntity.accepted()
+                .body(EntityResponse.builder()
+                        .message("Password was successfully changed")
+                        .build());
+    }
+
+    public ResponseEntity<EntityResponse> changePassword() {
+        return ResponseEntity.accepted()
+                .body(EntityResponse.builder()
+                        .message("User was enabled to log in to system")
+                        .build());
     }
 
 }
