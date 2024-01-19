@@ -11,11 +11,11 @@ public class Rank {
     @Id
     private String id;
 
-    private String rank;
+    private String name;
 
     @Builder
-    public Rank(String rank) {
-        this.rank = rank;
+    public Rank(String name) {
+        this.name = name;
     }
 
 }
