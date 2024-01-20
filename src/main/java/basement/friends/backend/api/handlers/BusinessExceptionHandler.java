@@ -94,4 +94,10 @@ public class BusinessExceptionHandler {
         return new ErrorResponse(exception);
     }
 
+    @ExceptionHandler(RankAlreadyExistsException.class)
+    @ResponseStatus(value = HttpStatus.FORBIDDEN)
+    public ErrorResponse getRankAlreadyExistsExceptionResponse(RankAlreadyExistsException exception) {
+        return new ErrorResponse(exception);
+    }
+
 }

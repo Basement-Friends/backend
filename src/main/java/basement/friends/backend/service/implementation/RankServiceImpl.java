@@ -1,5 +1,6 @@
 package basement.friends.backend.service.implementation;
 
+import basement.friends.backend.exception.RankAlreadyExistsException;
 import basement.friends.backend.model.Rank;
 import basement.friends.backend.repository.RankRepository;
 import basement.friends.backend.service.definition.RankService;
@@ -26,6 +27,9 @@ public class RankServiceImpl implements RankService {
 
     @Override
     public void saveRank(Rank rank) {
+        if (rankRepository.existsByNameIgnoreCase(rank.getName())) {
+            throw new RankAlreadyExistsException();
+        }
         rankRepository.save(rank);
     }
 

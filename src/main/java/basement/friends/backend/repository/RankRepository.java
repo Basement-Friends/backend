@@ -8,4 +8,6 @@ import org.springframework.stereotype.Repository;
 public interface RankRepository extends MongoRepository<Rank, String> {
 
     Rank getByName(String name);
+
+    boolean existsByNameIgnoreCase(String name);
 }
