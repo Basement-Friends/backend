@@ -88,4 +88,16 @@ public class BusinessExceptionHandler {
         return new ErrorResponse(exception);
     }
 
+    @ExceptionHandler(RankNotFoundException.class)
+    @ResponseStatus(value = HttpStatus.NOT_FOUND)
+    public ErrorResponse getRankNotFoundExceptionResponse(RankNotFoundException exception) {
+        return new ErrorResponse(exception);
+    }
+
+    @ExceptionHandler(RankAlreadyExistsException.class)
+    @ResponseStatus(value = HttpStatus.FORBIDDEN)
+    public ErrorResponse getRankAlreadyExistsExceptionResponse(RankAlreadyExistsException exception) {
+        return new ErrorResponse(exception);
+    }
+
 }
