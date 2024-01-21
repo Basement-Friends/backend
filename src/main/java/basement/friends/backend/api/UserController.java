@@ -4,9 +4,11 @@ import basement.friends.backend.auth.AuthService;
 import basement.friends.backend.model.DTO.request.BasicUserRequest;
 import basement.friends.backend.model.DTO.request.ChangePasswordRequest;
 import basement.friends.backend.model.DTO.request.GamerInformationRequest;
+import basement.friends.backend.model.DTO.request.RankRequest;
 import basement.friends.backend.model.DTO.response.EntityResponse;
 import basement.friends.backend.model.GamerInformation;
 import basement.friends.backend.model.User;
+import basement.friends.backend.service.definition.GamerService;
 import basement.friends.backend.service.definition.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +26,7 @@ import java.util.Set;
 @RequestMapping("api/user")
 public class UserController {
     private final UserService userService;
+    private final GamerService gamerService;
     private final AuthService authService;
 
 
@@ -42,13 +45,13 @@ public class UserController {
     @PreAuthorize("permitAll()")
     @GetMapping("/info/{username}")
     Optional<GamerInformation> getUserInfo(@PathVariable String username) {
-        return Optional.ofNullable(userService.getExtendedUserInfo(username));
+        return Optional.ofNullable(gamerService.getExtendedUserInfo(username));
 
     }
     @PreAuthorize("permitAll()")
     @GetMapping("/info/all")
     Set<GamerInformation> getUserInfo() {
-        return userService.getExtendedUserInfos();
+        return gamerService.getExtendedUserInfos();
 
     }
 
@@ -90,10 +93,13 @@ public class UserController {
                         .build());
     }
 
-    public ResponseEntity<EntityResponse> changePassword() {
+    @PreAuthorize("hasAuthority({'ROLE_ADMIN'})")
+    @PutMapping("/addRank/{username}")
+    public ResponseEntity<EntityResponse> addRankToUser(@RequestBody RankRequest request, @PathVariable String username) {
+        gamerService.addRank(username, request.getName());
         return ResponseEntity.accepted()
                 .body(EntityResponse.builder()
-                        .message("User was enabled to log in to system")
+                        .message("Rank was added to user")
                         .build());
     }
 

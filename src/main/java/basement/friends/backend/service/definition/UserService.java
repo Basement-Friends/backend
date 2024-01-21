@@ -1,7 +1,6 @@
 package basement.friends.backend.service.definition;
 
 import basement.friends.backend.model.DTO.request.ChangePasswordRequest;
-import basement.friends.backend.model.GamerInformation;
 import basement.friends.backend.model.User;
 
 import java.util.List;
@@ -28,10 +27,7 @@ public interface UserService {
 
     boolean existsByEmail(String email);
 
-    GamerInformation getExtendedUserInfo(String id);
-
-    Set<GamerInformation> getExtendedUserInfos();
-
     void changePassword(String username, ChangePasswordRequest passwordRequest);
+
 
 }
