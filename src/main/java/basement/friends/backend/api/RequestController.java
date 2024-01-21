@@ -7,6 +7,7 @@ import basement.friends.backend.model.Request;
 import basement.friends.backend.model.User;
 import basement.friends.backend.model.enums.RequestStatus;
 import basement.friends.backend.service.definition.ChatService;
+import basement.friends.backend.service.definition.GamerService;
 import basement.friends.backend.service.definition.RequestService;
 import basement.friends.backend.service.definition.UserService;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +27,8 @@ import java.util.stream.Collectors;
 public class RequestController {
 
     private final UserService userService;
+
+    private final GamerService gamerService;
 
     private final RequestService requestService;
 
@@ -83,7 +86,7 @@ public class RequestController {
         return ResponseEntity.ok()
                 .body(requestService.getAllUserRequests(user).stream().map(
                         req -> RequestResponse.builder()
-                        .from(userService.getExtendedUserInfo(req.getInitiator().getId()).getFirstName() + userService.getExtendedUserInfo(req.getInitiator().getId()).getLastName())
+                        .from(gamerService.getExtendedUserInfo(req.getInitiator().getId()).getFirstName() + gamerService.getExtendedUserInfo(req.getInitiator().getId()).getLastName())
                         .type("Friend request")
                         .creationDate(req.getCreationDate())
                         .updateDate(req.getUpdateDate())
@@ -98,7 +101,7 @@ public class RequestController {
         return ResponseEntity.ok()
                 .body(requestService.getAllUserRequests(user).stream().map(
                         req -> RequestResponse.builder()
-                                .from(userService.getExtendedUserInfo(req.getInitiator().getId()).getFirstName() + userService.getExtendedUserInfo(req.getInitiator().getId()).getLastName())
+                                .from(gamerService.getExtendedUserInfo(req.getInitiator().getId()).getFirstName() + gamerService.getExtendedUserInfo(req.getInitiator().getId()).getLastName())
                                 .type("Friend request")
                                 .creationDate(req.getCreationDate())
                                 .updateDate(req.getUpdateDate())

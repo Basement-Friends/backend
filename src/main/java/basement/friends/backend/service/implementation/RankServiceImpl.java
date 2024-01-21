@@ -1,6 +1,7 @@
 package basement.friends.backend.service.implementation;
 
 import basement.friends.backend.exception.RankAlreadyExistsException;
+import basement.friends.backend.exception.RankNotFoundException;
 import basement.friends.backend.model.Rank;
 import basement.friends.backend.repository.RankRepository;
 import basement.friends.backend.service.definition.RankService;
@@ -22,7 +23,8 @@ public class RankServiceImpl implements RankService {
 
     @Override
     public Rank getRankByName(String name) {
-        return rankRepository.getByName(name);
+        return rankRepository.getByName(name)
+                .orElseThrow(RankNotFoundException::new);
     }
 
     @Override
@@ -35,7 +37,7 @@ public class RankServiceImpl implements RankService {
 
     @Override
     public void deleteRank(String name) {
-        Rank rank = rankRepository.getByName(name);
+        Rank rank = rankRepository.getByName(name).orElseThrow(RankAlreadyExistsException::new);
         rankRepository.delete(rank);
     }
 }

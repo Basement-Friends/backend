@@ -7,6 +7,9 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -23,14 +26,26 @@ public class GamerInformation {
 
     private Gender gender;
 
-    private Set<UserGameRecord> gameRecords;
+    private List<UserGameRecord> gameRecords;
 
     private Set<Rank> ranks;
 
     private Address address;
 
 
+    public void addRank(Rank rank) {
+        if (this.ranks == null) {
+            this.ranks = new HashSet<>();
+        }
+        this.ranks.add(rank);
+    }
 
+    public void addGameRecord(UserGameRecord gameRecord) {
+        if (this.gameRecords == null) {
+            this.gameRecords = new ArrayList<>();
+        }
+        this.gameRecords.add(gameRecord);
+    }
 
 
 }

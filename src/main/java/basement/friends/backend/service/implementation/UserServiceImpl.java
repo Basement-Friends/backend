@@ -1,15 +1,14 @@
 package basement.friends.backend.service.implementation;
 
 import basement.friends.backend.exception.EmailNotFoundException;
-import basement.friends.backend.exception.GamerInfoNotFoundException;
 import basement.friends.backend.exception.UserIdNotFoundException;
 import basement.friends.backend.exception.UsernameNotFoundException;
 import basement.friends.backend.model.DTO.request.ChangePasswordRequest;
-import basement.friends.backend.model.GamerInformation;
 import basement.friends.backend.model.Picture;
 import basement.friends.backend.model.User;
 import basement.friends.backend.repository.GamerRepository;
 import basement.friends.backend.repository.PictureRepository;
+import basement.friends.backend.repository.RankRepository;
 import basement.friends.backend.repository.UserRepository;
 import basement.friends.backend.service.definition.UserService;
 import lombok.AllArgsConstructor;
@@ -27,18 +26,16 @@ public class UserServiceImpl implements UserService {
     private final GamerRepository extendedUserRepository;
     private final PictureRepository pictureRepository;
     private final PasswordEncoder passwordEncoder;
+    private final RankRepository rankRepository;
 
     @Override
     public User getById(String id) {
-        return userRepository.findById(id)
-                .orElseThrow(UserIdNotFoundException::new);
+        return userRepository.findById(id).orElseThrow(UserIdNotFoundException::new);
     }
 
     @Override
     public User getLoggedUser() {
-        Object principal = SecurityContextHolder.getContext()
-                .getAuthentication()
-                .getPrincipal();
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (principal instanceof UserDetails) {
             String username = ((UserDetails) principal).getUsername();
             return this.getByUsername(username);
@@ -48,14 +45,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getByUsername(String username) {
-        return userRepository.getUserByUsername(username)
-                .orElseThrow(UsernameNotFoundException::new);
+        return userRepository.getUserByUsername(username).orElseThrow(UsernameNotFoundException::new);
     }
 
     @Override
     public User getByEmail(String email) {
-        return userRepository.getUserByEmail(email)
-                .orElseThrow(EmailNotFoundException::new);
+        return userRepository.getUserByEmail(email).orElseThrow(EmailNotFoundException::new);
     }
 
     @Override
@@ -68,10 +63,7 @@ public class UserServiceImpl implements UserService {
         Set<User> selectedUsers = new HashSet<>();
         List<String> failedUsernames = new ArrayList<>();
         usernames.forEach(username -> {
-            userRepository.getUserByUsername(username).ifPresentOrElse(
-                    selectedUsers::add,
-                    () -> failedUsernames.add(username)
-            );
+            userRepository.getUserByUsername(username).ifPresentOrElse(selectedUsers::add, () -> failedUsernames.add(username));
         });
         if (failedUsernames.isEmpty()) {
             return selectedUsers;
@@ -93,8 +85,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteByUsername(String username) {
-        User user = userRepository.getUserByUsername(username)
-                .orElseThrow(UserIdNotFoundException::new);
+        User user = userRepository.getUserByUsername(username).orElseThrow(UserIdNotFoundException::new);
         userRepository.delete(user);
         extendedUserRepository.deleteById(user.getId());
         Picture picture = pictureRepository.getByUser_Username(username).orElse(null);
@@ -106,16 +97,6 @@ public class UserServiceImpl implements UserService {
         return userRepository.existsByEmail(email);
     }
 
-    @Override
-    public GamerInformation getExtendedUserInfo(String id) {
-        return extendedUserRepository.findById(id)
-                .orElseThrow(GamerInfoNotFoundException::new);
-    }
-
-    @Override
-    public Set<GamerInformation> getExtendedUserInfos() {
-        return new HashSet<>(extendedUserRepository.findAll());
-    }
 
     @Override
     public void changePassword(String username, ChangePasswordRequest passwordRequest) {
@@ -124,4 +105,6 @@ public class UserServiceImpl implements UserService {
         user.setPassword(passwordEncoder.encode(passwordRequest.getNewPassword()));
         userRepository.save(user);
     }
+
+
 }
