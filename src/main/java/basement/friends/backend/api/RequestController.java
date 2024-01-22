@@ -3,6 +3,7 @@ package basement.friends.backend.api;
 import basement.friends.backend.model.Chat;
 import basement.friends.backend.model.DTO.response.EntityResponse;
 import basement.friends.backend.model.DTO.response.RequestResponse;
+import basement.friends.backend.model.GamerInformation;
 import basement.friends.backend.model.Request;
 import basement.friends.backend.model.User;
 import basement.friends.backend.model.enums.RequestStatus;
@@ -58,9 +59,14 @@ public class RequestController {
     public ResponseEntity<EntityResponse> acceptFriendRequest(@PathVariable String id) {
         Request request = Request.builder().status(RequestStatus.ACCEPTED).build();
         User loggedUser = userService.getLoggedUser();
+        GamerInformation gamer = gamerService.getExtendedUserInfo(loggedUser.getId());
         requestService.updateRequest(id, request);
         chatService.createChat(Chat.builder()
-                .users(new HashSet<>(Set.of(loggedUser, request.getInitiator())))
+                .users(new HashSet<>(Set.of(gamer, request.getInitiator()).stream().map(g->{
+                    Chat.SimpleUser.builder()
+                            .username(g.ge)
+                            .
+                })))
                 .build());
         return ResponseEntity.ok()
                 .body(EntityResponse.builder()
