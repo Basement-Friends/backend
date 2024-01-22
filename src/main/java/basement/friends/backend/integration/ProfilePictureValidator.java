@@ -1,6 +1,7 @@
 package basement.friends.backend.integration;
 
 import basement.friends.backend.exception.FailedToConnectException;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -22,17 +23,20 @@ public class ProfilePictureValidator {
     RestTemplate restTemplate = new RestTemplate();
     HttpHeaders headers = new HttpHeaders();
 
+    @Getter
+    boolean valid = false;
+
 
     private void setHeaders() {
-        this.headers.setContentType(MediaType.APPLICATION_PROBLEM_JSON);
+        this.headers.setContentType(MediaType.MULTIPART_FORM_DATA);
     }
 
 
-    public boolean isPictureValid(MultipartFile file) throws IOException {
+    public String getPictureValidationMsg(MultipartFile file) throws IOException {
 
-        byte [] byteArray = file.getBytes();
-
-        String data = "\"data\": "+byteArray.toString();
+//        byte [] byteArray = file.getBytes();
+//
+//        String data = "\"data\": "+ Arrays.toString(byteArray);
 
         try {
             this.setHeaders();
@@ -40,13 +44,16 @@ public class ProfilePictureValidator {
                     this.URI,
                     new HttpEntity<>(file.getBytes(), this.headers),
                     String.class);
-            if (Objects.equals(response.getBody(), "0")) {
-                System.out.println(response.getBody());
-                return false;
-            } else {
-                System.out.println(response.getBody());
-                return true;
-            }
+            return switch (Objects.requireNonNull(response.getBody())) {
+                case "0" -> "No human detected";
+                case "1" -> "Presence of more than one person detected.";
+                case "3" -> "Person is under 16 years old.";
+                case "4" -> {
+                    this.valid = true;
+                    yield "Person is 16 years old or older.";
+                }
+                default -> "Other error";
+            };
         } catch (Exception e) {
             throw new FailedToConnectException(e.getMessage());
 

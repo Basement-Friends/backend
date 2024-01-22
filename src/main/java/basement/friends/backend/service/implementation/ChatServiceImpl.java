@@ -2,6 +2,7 @@ package basement.friends.backend.service.implementation;
 
 import basement.friends.backend.exception.ChatNotFoundException;
 import basement.friends.backend.model.Chat;
+import basement.friends.backend.model.GamerInformation;
 import basement.friends.backend.model.Message;
 import basement.friends.backend.model.User;
 import basement.friends.backend.repository.ChatRepository;
@@ -10,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -29,7 +29,7 @@ public class ChatServiceImpl implements ChatService {
     @Override
     public Set<Chat> getByUsers(User... users) {
         Set<User> usersSet = Arrays.stream(users).collect(Collectors.toSet());
-        return chatRepository.getChatsByUsersIn(Collections.singleton(usersSet));
+        return chatRepository.getChatsByUsersIsContaining(usersSet);
     }
 
     @Override
@@ -38,8 +38,14 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
-    public Chat addUser(Chat chat, User user) {
-        return null;
+    public Chat addUser(Chat chat, GamerInformation gamer) {
+        Chat.SimpleUser simpleUser = Chat.SimpleUser.builder()
+                .username(gamer.getNickName())
+                .firstName(gamer.getFirstName())
+                .lastName(gamer.getLastName())
+                .build();
+        chat.addUsers(simpleUser);
+        return chatRepository.save(chat);
     }
 
     @Override
@@ -56,16 +62,26 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
-    public void addUsers(String id, User... users) {
+    public void addUsers(String id, GamerInformation... gamers) {
         Chat chat = this.getById(id);
-        Arrays.stream(users).forEach(chat::addUsers);
+        Arrays.stream(gamers).map(g->
+                Chat.SimpleUser.builder()
+                        .username(g.getNickName())
+                        .firstName(g.getFirstName())
+                        .lastName(g.getLastName())
+                        .build()).forEach(chat::addUsers);
         chatRepository.save(chat);
     }
 
     @Override
-    public void deleteUsers(String id, User ... users) {
+    public void deleteUsers(String id, GamerInformation ... gamers) {
         Chat chat = this.getById(id);
-        Arrays.stream(users).forEach(chat::deleteUserFromChat);
+        Arrays.stream(gamers).map(g->
+                Chat.SimpleUser.builder()
+                        .username(g.getNickName())
+                        .firstName(g.getFirstName())
+                        .lastName(g.getLastName())
+                        .build()).forEach(chat::deleteUserFromChat);
         chatRepository.save(chat);
 
     }

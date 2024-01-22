@@ -17,7 +17,7 @@ public class UserInfoResponse {
 
     private Set<UserGameRecord> gameRecords;
 
-    private Set<String> ranks;
+    private Set<RankResponse> ranks;
 
     private AddressResponse address;
 }

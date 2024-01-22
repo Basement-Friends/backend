@@ -32,7 +32,7 @@ public class ChatController {
     private final UserService userService;
     private final ToxicMessageValidator messageIntegrator;
 
-    @PreAuthorize("hasAuthority({'ROLE_USER', 'ROLE_ADMIN'})")
+    @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
     @PostMapping("/create")
     public ResponseEntity<EntityResponse> postChat(@RequestBody ChatRequest chatRequest) {
         ChatFactory chatFactory = new ChatFactoryImpl();
@@ -42,9 +42,9 @@ public class ChatController {
 
     }
 
-    @PreAuthorize("hasAuthority({'ROLE_USER', 'ROLE_ADMIN'})")
+    @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
     @GetMapping("/myChats")
-    public ResponseEntity<Set<ChatResponse>> getMyChats(@RequestBody ChatRequest chatRequest) {
+    public ResponseEntity<Set<ChatResponse>> getMyChats() {
         User loggedUser = userService.getLoggedUser();
         Set<Chat> chats = chatService.getByUsers(loggedUser);
         Set<ChatResponse> chatResponses = new HashSet<>();
@@ -58,8 +58,8 @@ public class ChatController {
 
     }
 
-    @PreAuthorize("hasAuthority({'ROLE_USER'})")
-    @PostMapping("/{id}/sendMessage")
+    @PreAuthorize("hasAuthority('ROLE_USER')")
+    @PostMapping("/sendMessage/{id}")
     public ResponseEntity<EntityResponse> sendMessage(@RequestBody MessageRequest messageRequest, @PathVariable String id) {
         if (!messageIntegrator.isMessageToxic(messageRequest)) {
             chatService.sendMessage(id, Message.builder().sender(userService.getLoggedUser()).message(messageRequest.getMsgText()).possibleToxicity(false).postTime(new Date()).build());
@@ -69,8 +69,8 @@ public class ChatController {
         }
     }
 
-    @PreAuthorize("hasAuthority({'ROLE_USER'})")
-    @PostMapping("/{id}/sendToxicMessage")
+    @PreAuthorize("hasAuthority('ROLE_USER')")
+    @PostMapping("/sendToxicMessage/{id}")
     public ResponseEntity<EntityResponse> sendToxicMessage(@RequestBody MessageRequest messageRequest, @PathVariable String id) {
         chatService.sendMessage(id, Message.builder().sender(userService.getLoggedUser()).message(messageRequest.getMsgText()).possibleToxicity(true).postTime(new Date()).build());
         return ResponseEntity.accepted().body(EntityResponse.builder().message("Message was send").build());
