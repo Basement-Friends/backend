@@ -12,7 +12,7 @@ public class Message {
     @Id
     private String id;
 
-    private User sender;
+    private Chat.SimpleUser sender;
 
     private String message;
 

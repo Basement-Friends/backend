@@ -1,6 +1,7 @@
 package basement.friends.backend.service.implementation;
 
 import basement.friends.backend.exception.EmailNotFoundException;
+import basement.friends.backend.exception.GamerInfoNotFoundException;
 import basement.friends.backend.exception.UserIdNotFoundException;
 import basement.friends.backend.exception.UsernameNotFoundException;
 import basement.friends.backend.model.DTO.request.ChangePasswordRequest;
@@ -75,7 +76,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Set<GamerInformation> getGamerByUsernames(Set<String> usernames) {
+    public Set<GamerInformation> getGamersByUsernames(Set<String> usernames) {
         Set<GamerInformation> selectedUsers = new HashSet<>();
         List<String> failedUsernames = new ArrayList<>();
         usernames.forEach(username -> {
@@ -87,6 +88,11 @@ public class UserServiceImpl implements UserService {
             String joinedUsernames = String.join(", ", failedUsernames);
             throw new UserIdNotFoundException(STR. "Users: \{ joinedUsernames } are not found!" );
         }
+    }
+
+    @Override
+    public GamerInformation getGamerInformationByUsername(String username) {
+        return extendedUserRepository.getGamerInformationByNickName(username).orElseThrow(GamerInfoNotFoundException::new);
     }
 
     @Override
