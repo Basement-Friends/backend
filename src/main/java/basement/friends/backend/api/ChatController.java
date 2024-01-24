@@ -36,7 +36,7 @@ public class ChatController {
     @PostMapping("/create")
     public ResponseEntity<EntityResponse> postChat(@RequestBody ChatRequest chatRequest) {
         ChatFactory chatFactory = new ChatFactoryImpl();
-        Chat chat = chatFactory.createFromRequest(userService.getUsersByUsernames(chatRequest.getUsernames()));
+        Chat chat = chatFactory.createFromRequest(userService.getGamerByUsernames(chatRequest.getUsernames()));
         chatService.createChat(chat);
         return ResponseEntity.accepted().body(EntityResponse.builder().message("Chat was created").build());
 
@@ -48,10 +48,13 @@ public class ChatController {
         User loggedUser = userService.getLoggedUser();
         Set<Chat> chats = chatService.getByUsers(loggedUser);
         Set<ChatResponse> chatResponses = new HashSet<>();
-
         chats.forEach(chat -> {
             Set<UserBasicResponse> users = new HashSet<>();
-            chat.getUsers().forEach(user -> users.add(UserBasicResponse.builder().username(user.getUsername()).build()));
+            chat.getUsers().forEach(user -> users.add(UserBasicResponse.builder()
+                    .username(user.getUsername())
+                    .firstname(user.getFirstName())
+                    .lastname(user.getLastName())
+                    .build()));
             chatResponses.add(ChatResponse.builder().name(null).users(users).messages(chat.getMessages()).build());
         });
         return ResponseEntity.accepted().body(chatResponses);

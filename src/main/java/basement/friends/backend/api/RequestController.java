@@ -60,13 +60,17 @@ public class RequestController {
         Request request = Request.builder().status(RequestStatus.ACCEPTED).build();
         User loggedUser = userService.getLoggedUser();
         GamerInformation gamer = gamerService.getExtendedUserInfo(loggedUser.getId());
+        GamerInformation initiator = gamerService.getExtendedUserInfo(request.getInitiator().getId());
         requestService.updateRequest(id, request);
+        Set<GamerInformation> gamerSet = new HashSet<>(Set.of(gamer, initiator));
         chatService.createChat(Chat.builder()
-                .users(new HashSet<>(Set.of(gamer, request.getInitiator()).stream().map(g->{
-                    Chat.SimpleUser.builder()
-                            .username(g.ge)
-                            .
-                })))
+                .users(gamerSet.stream().map(g ->
+                        Chat.SimpleUser.builder()
+                                .username(g.getNickName())
+                                .lastName(g.getLastName())
+                                .firstName(g.getFirstName())
+                                .build()
+                ).collect(Collectors.toSet()))
                 .build());
         return ResponseEntity.ok()
                 .body(EntityResponse.builder()
@@ -92,11 +96,11 @@ public class RequestController {
         return ResponseEntity.ok()
                 .body(requestService.getAllUserRequests(user).stream().map(
                         req -> RequestResponse.builder()
-                        .from(gamerService.getExtendedUserInfo(req.getInitiator().getId()).getFirstName() + gamerService.getExtendedUserInfo(req.getInitiator().getId()).getLastName())
-                        .type("Friend request")
-                        .creationDate(req.getCreationDate())
-                        .updateDate(req.getUpdateDate())
-                        .build()
+                                .from(gamerService.getExtendedUserInfo(req.getInitiator().getId()).getFirstName() + gamerService.getExtendedUserInfo(req.getInitiator().getId()).getLastName())
+                                .type("Friend request")
+                                .creationDate(req.getCreationDate())
+                                .updateDate(req.getUpdateDate())
+                                .build()
                 ).collect(Collectors.toSet()));
     }
 

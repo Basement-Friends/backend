@@ -2,6 +2,7 @@ package basement.friends.backend.model;
 
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -34,6 +35,7 @@ public class Chat {
     }
 
     @Builder
+    @Getter
     public static final class SimpleUser {
         private String username;
         private String firstName;

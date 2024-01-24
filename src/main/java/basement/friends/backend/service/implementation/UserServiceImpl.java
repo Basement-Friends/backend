@@ -4,6 +4,7 @@ import basement.friends.backend.exception.EmailNotFoundException;
 import basement.friends.backend.exception.UserIdNotFoundException;
 import basement.friends.backend.exception.UsernameNotFoundException;
 import basement.friends.backend.model.DTO.request.ChangePasswordRequest;
+import basement.friends.backend.model.GamerInformation;
 import basement.friends.backend.model.Picture;
 import basement.friends.backend.model.User;
 import basement.friends.backend.repository.GamerRepository;
@@ -64,6 +65,21 @@ public class UserServiceImpl implements UserService {
         List<String> failedUsernames = new ArrayList<>();
         usernames.forEach(username -> {
             userRepository.getUserByUsername(username).ifPresentOrElse(selectedUsers::add, () -> failedUsernames.add(username));
+        });
+        if (failedUsernames.isEmpty()) {
+            return selectedUsers;
+        } else {
+            String joinedUsernames = String.join(", ", failedUsernames);
+            throw new UserIdNotFoundException(STR. "Users: \{ joinedUsernames } are not found!" );
+        }
+    }
+
+    @Override
+    public Set<GamerInformation> getGamerByUsernames(Set<String> usernames) {
+        Set<GamerInformation> selectedUsers = new HashSet<>();
+        List<String> failedUsernames = new ArrayList<>();
+        usernames.forEach(username -> {
+            extendedUserRepository.getGamerInformationByNickName(username).ifPresentOrElse(selectedUsers::add, () -> failedUsernames.add(username));
         });
         if (failedUsernames.isEmpty()) {
             return selectedUsers;
