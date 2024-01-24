@@ -1,6 +1,7 @@
 package basement.friends.backend.service.definition;
 
 import basement.friends.backend.model.Chat;
+import basement.friends.backend.model.GamerInformation;
 import basement.friends.backend.model.Message;
 import basement.friends.backend.model.User;
 
@@ -14,13 +15,13 @@ public interface ChatService {
 
     Chat createChat(Chat chat);
 
-    Chat addUser(Chat chat, User user);
+    Chat addUser(Chat chat, GamerInformation gamer);
 
     Chat sendMessage(String id, Message message);
 
     void delete(String id);
 
-    void addUsers(String id, User... users);
+    void addUsers(String id, GamerInformation... gamer);
 
-    void deleteUsers(String id, User... user);
+    void deleteUsers(String id, GamerInformation... gamer);
 }

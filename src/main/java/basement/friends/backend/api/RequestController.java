@@ -3,6 +3,7 @@ package basement.friends.backend.api;
 import basement.friends.backend.model.Chat;
 import basement.friends.backend.model.DTO.response.EntityResponse;
 import basement.friends.backend.model.DTO.response.RequestResponse;
+import basement.friends.backend.model.GamerInformation;
 import basement.friends.backend.model.Request;
 import basement.friends.backend.model.User;
 import basement.friends.backend.model.enums.RequestStatus;
@@ -58,9 +59,18 @@ public class RequestController {
     public ResponseEntity<EntityResponse> acceptFriendRequest(@PathVariable String id) {
         Request request = Request.builder().status(RequestStatus.ACCEPTED).build();
         User loggedUser = userService.getLoggedUser();
+        GamerInformation gamer = gamerService.getExtendedUserInfo(loggedUser.getId());
+        GamerInformation initiator = gamerService.getExtendedUserInfo(request.getInitiator().getId());
         requestService.updateRequest(id, request);
+        Set<GamerInformation> gamerSet = new HashSet<>(Set.of(gamer, initiator));
         chatService.createChat(Chat.builder()
-                .users(new HashSet<>(Set.of(loggedUser, request.getInitiator())))
+                .users(gamerSet.stream().map(g ->
+                        Chat.SimpleUser.builder()
+                                .username(g.getNickName())
+                                .lastName(g.getLastName())
+                                .firstName(g.getFirstName())
+                                .build()
+                ).collect(Collectors.toSet()))
                 .build());
         return ResponseEntity.ok()
                 .body(EntityResponse.builder()
@@ -86,11 +96,11 @@ public class RequestController {
         return ResponseEntity.ok()
                 .body(requestService.getAllUserRequests(user).stream().map(
                         req -> RequestResponse.builder()
-                        .from(gamerService.getExtendedUserInfo(req.getInitiator().getId()).getFirstName() + gamerService.getExtendedUserInfo(req.getInitiator().getId()).getLastName())
-                        .type("Friend request")
-                        .creationDate(req.getCreationDate())
-                        .updateDate(req.getUpdateDate())
-                        .build()
+                                .from(gamerService.getExtendedUserInfo(req.getInitiator().getId()).getFirstName() + gamerService.getExtendedUserInfo(req.getInitiator().getId()).getLastName())
+                                .type("Friend request")
+                                .creationDate(req.getCreationDate())
+                                .updateDate(req.getUpdateDate())
+                                .build()
                 ).collect(Collectors.toSet()));
     }
 

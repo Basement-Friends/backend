@@ -11,4 +11,6 @@ import java.util.Set;
 @Repository
 public interface ChatRepository extends MongoRepository<Chat, String> {
     Set<Chat> getChatsByUsersIn(Collection<Set<User>> users);
+
+    Set<Chat> getChatsByUsersIsContaining(Set<User> users);
 }

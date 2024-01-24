@@ -4,6 +4,7 @@ import basement.friends.backend.integration.ProfilePictureValidator;
 import basement.friends.backend.model.DTO.response.EntityResponse;
 import basement.friends.backend.model.Picture;
 import basement.friends.backend.model.User;
+import basement.friends.backend.service.definition.GamerService;
 import basement.friends.backend.service.definition.PictureFactory;
 import basement.friends.backend.service.definition.PictureService;
 import basement.friends.backend.service.definition.UserService;
@@ -26,18 +27,24 @@ public class PictureController {
     private final PictureService pictureService;
     private final PictureFactory pictureFactory;
     private final UserService userService;
+    private final GamerService gamerService;
+
 
     @PreAuthorize("permitAll()")
     @PostMapping("/upload")
     public ResponseEntity<EntityResponse> uploadMyProfilePicture(@RequestParam("file") MultipartFile file) throws IOException {
-        User user = userService.getLoggedUser();
-        Picture profilePicture = pictureFactory.createFromFile(file, user);
+        User loggedUser = userService.getLoggedUser();
+        Picture profilePicture = pictureFactory.createFromFile(file, loggedUser);
         pictureService.savePicture(profilePicture);
         ProfilePictureValidator profilePictureValidator = new ProfilePictureValidator();
-        profilePictureValidator.isPictureValid(file);
+        String validationMsg = profilePictureValidator.getPictureValidationMsg(file);
+        if (profilePictureValidator.isValid()) {
+            gamerService.addRank(loggedUser.getUsername(), "validated");
+            validationMsg = STR."\{validationMsg} Account was validated.";
+        }
         return ResponseEntity.accepted()
                 .body(EntityResponse.builder()
-                        .message("Picture was uploaded successfully")
+                        .message(STR."Picture was uploaded successfully. \{validationMsg}")
                         .build());
     }
 
