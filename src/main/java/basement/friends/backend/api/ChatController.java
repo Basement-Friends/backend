@@ -7,8 +7,8 @@ import basement.friends.backend.model.DTO.request.MessageRequest;
 import basement.friends.backend.model.DTO.response.ChatResponse;
 import basement.friends.backend.model.DTO.response.EntityResponse;
 import basement.friends.backend.model.DTO.response.UserBasicResponse;
+import basement.friends.backend.model.GamerInformation;
 import basement.friends.backend.model.Message;
-import basement.friends.backend.model.User;
 import basement.friends.backend.service.definition.ChatFactory;
 import basement.friends.backend.service.definition.ChatService;
 import basement.friends.backend.service.definition.UserService;
@@ -36,7 +36,7 @@ public class ChatController {
     @PostMapping("/create")
     public ResponseEntity<EntityResponse> postChat(@RequestBody ChatRequest chatRequest) {
         ChatFactory chatFactory = new ChatFactoryImpl();
-        Chat chat = chatFactory.createFromRequest(userService.getGamerByUsernames(chatRequest.getUsernames()));
+        Chat chat = chatFactory.createFromRequest(userService.getGamersByUsernames(chatRequest.getUsernames()));
         chatService.createChat(chat);
         return ResponseEntity.accepted().body(EntityResponse.builder().message("Chat was created").build());
 
@@ -45,7 +45,7 @@ public class ChatController {
     @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
     @GetMapping("/myChats")
     public ResponseEntity<Set<ChatResponse>> getMyChats() {
-        User loggedUser = userService.getLoggedUser();
+        GamerInformation loggedUser = userService.getGamerInformationByUsername(userService.getLoggedUser().getUsername());
         Set<Chat> chats = chatService.getByUsers(loggedUser);
         Set<ChatResponse> chatResponses = new HashSet<>();
         chats.forEach(chat -> {
@@ -55,7 +55,7 @@ public class ChatController {
                     .firstname(user.getFirstName())
                     .lastname(user.getLastName())
                     .build()));
-            chatResponses.add(ChatResponse.builder().name(null).users(users).messages(chat.getMessages()).build());
+            chatResponses.add(ChatResponse.builder().chatId(chat.getId()).name(chat.getId()).users(users).messages(chat.getMessages()).build());
         });
         return ResponseEntity.accepted().body(chatResponses);
 
@@ -65,7 +65,13 @@ public class ChatController {
     @PostMapping("/sendMessage/{id}")
     public ResponseEntity<EntityResponse> sendMessage(@RequestBody MessageRequest messageRequest, @PathVariable String id) {
         if (!messageIntegrator.isMessageToxic(messageRequest)) {
-            chatService.sendMessage(id, Message.builder().sender(userService.getLoggedUser()).message(messageRequest.getMsgText()).possibleToxicity(false).postTime(new Date()).build());
+            GamerInformation loggedGamer = userService.getGamerInformationByUsername(userService.getLoggedUser().getUsername());
+            chatService.sendMessage(id, Message.builder().sender(Chat.SimpleUser.builder()
+                    .username(loggedGamer.getNickName())
+                    .firstName(loggedGamer.getFirstName())
+                    .lastName(loggedGamer.getLastName())
+                    .build()
+            ).message(messageRequest.getMsgText()).possibleToxicity(false).postTime(new Date()).build());
             return ResponseEntity.accepted().body(EntityResponse.builder().message("Message was send").build());
         } else {
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(EntityResponse.builder().message("Message possibly contains questionable content").build());
@@ -75,7 +81,13 @@ public class ChatController {
     @PreAuthorize("hasAuthority('ROLE_USER')")
     @PostMapping("/sendToxicMessage/{id}")
     public ResponseEntity<EntityResponse> sendToxicMessage(@RequestBody MessageRequest messageRequest, @PathVariable String id) {
-        chatService.sendMessage(id, Message.builder().sender(userService.getLoggedUser()).message(messageRequest.getMsgText()).possibleToxicity(true).postTime(new Date()).build());
+        GamerInformation loggedGamer = userService.getGamerInformationByUsername(userService.getLoggedUser().getUsername());
+        chatService.sendMessage(id, Message.builder().sender(Chat.SimpleUser.builder()
+                .username(loggedGamer.getNickName())
+                .firstName(loggedGamer.getFirstName())
+                .lastName(loggedGamer.getLastName())
+                .build()
+        ).message(messageRequest.getMsgText()).possibleToxicity(true).postTime(new Date()).build());
         return ResponseEntity.accepted().body(EntityResponse.builder().message("Message was send").build());
 
     }

@@ -4,12 +4,12 @@ import basement.friends.backend.exception.ChatNotFoundException;
 import basement.friends.backend.model.Chat;
 import basement.friends.backend.model.GamerInformation;
 import basement.friends.backend.model.Message;
-import basement.friends.backend.model.User;
 import basement.friends.backend.repository.ChatRepository;
 import basement.friends.backend.service.definition.ChatService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -27,8 +27,12 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
-    public Set<Chat> getByUsers(User... users) {
-        Set<User> usersSet = Arrays.stream(users).collect(Collectors.toSet());
+    public Set<Chat> getByUsers(GamerInformation... gamers) {
+        Set<Chat.SimpleUser> usersSet = Arrays.stream(gamers).collect(Collectors.toSet()).stream().map(gamer-> Chat.SimpleUser.builder()
+                 .username(gamer.getNickName())
+                 .firstName(gamer.getFirstName())
+                 .lastName(gamer.getLastName())
+                 .build()).collect(Collectors.toSet());
         return chatRepository.getChatsByUsersIsContaining(usersSet);
     }
 
@@ -51,6 +55,9 @@ public class ChatServiceImpl implements ChatService {
     @Override
     public Chat sendMessage(String chatId, Message message) {
         Chat chat = this.getById(chatId);
+        if (chat.getMessages() == null) {
+            chat.setMessages(new ArrayList<>());
+        }
         chat.addMessage(message);
         return chatRepository.save(chat);
     }

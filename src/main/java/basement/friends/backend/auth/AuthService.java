@@ -88,7 +88,7 @@ public class AuthService {
                 GamerInformation gamer = GamerInformation.builder()
                         .nickName(req.getUsername())
                         .lastName(req.getLastname())
-                        .firstName(req.getLastname())
+                        .firstName(req.getFirstname())
                         .build();
                 userRepository.save(user);
                 gamerRepository.save(gamer);
