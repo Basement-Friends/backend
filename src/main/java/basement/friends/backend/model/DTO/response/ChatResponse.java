@@ -1,10 +1,8 @@
 package basement.friends.backend.model.DTO.response;
 
-import basement.friends.backend.model.Message;
 import lombok.Builder;
 import lombok.Data;
 
-import java.util.List;
 import java.util.Set;
 
 @Data
@@ -17,6 +15,21 @@ public class ChatResponse {
 
     Set<UserBasicResponse> users;
 
-    List<Message> messages;
+    public static String generateName(Set<UserBasicResponse> users, String username) {
+        final String[] name = {null};
+        users.forEach(user -> {
+            if (!user.username.equals(username)) {
+                if (name[0] != null) {
+                    name[0] =  STR."\{ name[0] }, \{user.firstname}";
+                } else {
+                    name[0] = STR."\{user.firstname}";
+                }
+
+            }
+        });
+        return name[0];
+
+    }
 
 }
+

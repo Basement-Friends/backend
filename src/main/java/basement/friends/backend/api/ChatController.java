@@ -21,7 +21,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
+
+import static basement.friends.backend.model.DTO.response.ChatResponse.generateName;
 
 @CrossOrigin
 @RestController
@@ -55,9 +59,22 @@ public class ChatController {
                     .firstname(user.getFirstName())
                     .lastname(user.getLastName())
                     .build()));
-            chatResponses.add(ChatResponse.builder().chatId(chat.getId()).name(chat.getId()).users(users).messages(chat.getMessages()).build());
+            chatResponses.add(ChatResponse.builder().chatId(chat.getId()).name(generateName(users, loggedUser.getNickName())).users(users).build());
         });
         return ResponseEntity.accepted().body(chatResponses);
+
+    }
+    @PreAuthorize("hasAuthority('ROLE_USER')")
+    @GetMapping("/getMessages/{id}")
+    public ResponseEntity<List<Message>> getMessages(@PathVariable String id) {
+        return ResponseEntity.accepted().body(
+                chatService.getById(id).getMessages().stream().map(msg-> Message.builder()
+                        .possibleToxicity(msg.isPossibleToxicity())
+                        .postTime(msg.getPostTime())
+                        .message(msg.getMessage())
+                        .sender(msg.getSender())
+                        .build()).collect(Collectors.toList())
+        );
 
     }
 

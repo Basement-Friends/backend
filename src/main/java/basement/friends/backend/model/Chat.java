@@ -6,8 +6,8 @@ import lombok.Getter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.List;
 import java.util.Set;
+import java.util.Stack;
 
 @Data
 @Document
@@ -16,14 +16,17 @@ public class Chat {
     private Set<SimpleUser> users;
     @Id
     private String id;
-    private List<Message> messages;
+    private Stack<Message> messages;
 
     public void addUsers(SimpleUser user) {
         users.add(user);
     }
 
     public void addMessage(Message message) {
-        this.messages.add(message);
+        if(this.messages == null) {
+            this.messages = new Stack<>();
+        }
+        this.messages.push(message);
     }
 
     public void deleteUserFromChat(SimpleUser user) {

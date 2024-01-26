@@ -5,7 +5,6 @@ import basement.friends.backend.model.DTO.response.EntityResponse;
 import basement.friends.backend.model.DTO.response.RankResponse;
 import basement.friends.backend.model.Rank;
 import basement.friends.backend.service.definition.RankService;
-import basement.friends.backend.service.definition.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -21,8 +20,6 @@ import java.util.stream.Collectors;
 public class RankController {
 
     private final RankService rankService;
-
-    private final UserService userService;
 
     @PreAuthorize("hasAuthority({'ROLE_ADMIN'})")
     @GetMapping("/all")

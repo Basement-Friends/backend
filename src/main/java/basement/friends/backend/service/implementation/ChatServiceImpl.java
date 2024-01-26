@@ -9,7 +9,6 @@ import basement.friends.backend.service.definition.ChatService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -22,17 +21,18 @@ public class ChatServiceImpl implements ChatService {
 
     @Override
     public Chat getById(String id) {
-        return chatRepository.findById(id)
+        Chat foundChat = chatRepository.findById(id)
                 .orElseThrow(ChatNotFoundException::new);
+        return foundChat;
     }
 
     @Override
     public Set<Chat> getByUsers(GamerInformation... gamers) {
-        Set<Chat.SimpleUser> usersSet = Arrays.stream(gamers).collect(Collectors.toSet()).stream().map(gamer-> Chat.SimpleUser.builder()
-                 .username(gamer.getNickName())
-                 .firstName(gamer.getFirstName())
-                 .lastName(gamer.getLastName())
-                 .build()).collect(Collectors.toSet());
+        Set<Chat.SimpleUser> usersSet = Arrays.stream(gamers).collect(Collectors.toSet()).stream().map(gamer -> Chat.SimpleUser.builder()
+                .username(gamer.getNickName())
+                .firstName(gamer.getFirstName())
+                .lastName(gamer.getLastName())
+                .build()).collect(Collectors.toSet());
         return chatRepository.getChatsByUsersIsContaining(usersSet);
     }
 
@@ -55,9 +55,6 @@ public class ChatServiceImpl implements ChatService {
     @Override
     public Chat sendMessage(String chatId, Message message) {
         Chat chat = this.getById(chatId);
-        if (chat.getMessages() == null) {
-            chat.setMessages(new ArrayList<>());
-        }
         chat.addMessage(message);
         return chatRepository.save(chat);
     }
@@ -71,7 +68,7 @@ public class ChatServiceImpl implements ChatService {
     @Override
     public void addUsers(String id, GamerInformation... gamers) {
         Chat chat = this.getById(id);
-        Arrays.stream(gamers).map(g->
+        Arrays.stream(gamers).map(g ->
                 Chat.SimpleUser.builder()
                         .username(g.getNickName())
                         .firstName(g.getFirstName())
@@ -81,9 +78,9 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
-    public void deleteUsers(String id, GamerInformation ... gamers) {
+    public void deleteUsers(String id, GamerInformation... gamers) {
         Chat chat = this.getById(id);
-        Arrays.stream(gamers).map(g->
+        Arrays.stream(gamers).map(g ->
                 Chat.SimpleUser.builder()
                         .username(g.getNickName())
                         .firstName(g.getFirstName())
