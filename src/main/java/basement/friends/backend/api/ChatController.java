@@ -7,7 +7,7 @@ import basement.friends.backend.model.DTO.request.MessageRequest;
 import basement.friends.backend.model.DTO.response.ChatResponse;
 import basement.friends.backend.model.DTO.response.EntityResponse;
 import basement.friends.backend.model.DTO.response.UserBasicResponse;
-import basement.friends.backend.model.GamerInformation;
+import basement.friends.backend.model.Gamer;
 import basement.friends.backend.model.Message;
 import basement.friends.backend.service.definition.ChatFactory;
 import basement.friends.backend.service.definition.ChatService;
@@ -49,7 +49,7 @@ public class ChatController {
     @PreAuthorize("hasAnyAuthority('ROLE_USER', 'ROLE_ADMIN')")
     @GetMapping("/myChats")
     public ResponseEntity<Set<ChatResponse>> getMyChats() {
-        GamerInformation loggedUser = userService.getGamerInformationByUsername(userService.getLoggedUser().getUsername());
+        Gamer loggedUser = userService.getGamerInformationByUsername(userService.getLoggedUser().getUsername());
         Set<Chat> chats = chatService.getByUsers(loggedUser);
         Set<ChatResponse> chatResponses = new HashSet<>();
         chats.forEach(chat -> {
@@ -82,7 +82,7 @@ public class ChatController {
     @PostMapping("/sendMessage/{id}")
     public ResponseEntity<EntityResponse> sendMessage(@RequestBody MessageRequest messageRequest, @PathVariable String id) {
         if (!messageIntegrator.isMessageToxic(messageRequest)) {
-            GamerInformation loggedGamer = userService.getGamerInformationByUsername(userService.getLoggedUser().getUsername());
+            Gamer loggedGamer = userService.getGamerInformationByUsername(userService.getLoggedUser().getUsername());
             chatService.sendMessage(id, Message.builder().sender(Chat.SimpleUser.builder()
                     .username(loggedGamer.getNickName())
                     .firstName(loggedGamer.getFirstName())
@@ -98,7 +98,7 @@ public class ChatController {
     @PreAuthorize("hasAuthority('ROLE_USER')")
     @PostMapping("/sendToxicMessage/{id}")
     public ResponseEntity<EntityResponse> sendToxicMessage(@RequestBody MessageRequest messageRequest, @PathVariable String id) {
-        GamerInformation loggedGamer = userService.getGamerInformationByUsername(userService.getLoggedUser().getUsername());
+        Gamer loggedGamer = userService.getGamerInformationByUsername(userService.getLoggedUser().getUsername());
         chatService.sendMessage(id, Message.builder().sender(Chat.SimpleUser.builder()
                 .username(loggedGamer.getNickName())
                 .firstName(loggedGamer.getFirstName())

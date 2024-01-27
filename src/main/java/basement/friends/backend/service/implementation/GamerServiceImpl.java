@@ -4,7 +4,8 @@ import basement.friends.backend.exception.GamerInfoNotFoundException;
 import basement.friends.backend.exception.RankNotFoundException;
 import basement.friends.backend.exception.UserIdNotFoundException;
 import basement.friends.backend.exception.UsernameNotFoundException;
-import basement.friends.backend.model.GamerInformation;
+import basement.friends.backend.model.Chat;
+import basement.friends.backend.model.Gamer;
 import basement.friends.backend.model.Rank;
 import basement.friends.backend.repository.GamerRepository;
 import basement.friends.backend.repository.RankRepository;
@@ -23,13 +24,19 @@ public class GamerServiceImpl implements GamerService {
     private final UserRepository userRepository;
 
     private final RankRepository rankRepository;
+
     @Override
-    public GamerInformation getExtendedUserInfo(String id) {
+    public Gamer getGamerByNickname(String nickname) {
+        return gamerRepository.getGamerByNickName(nickname).orElseThrow(GamerInfoNotFoundException::new);
+    }
+
+    @Override
+    public Gamer getExtendedUserInfo(String id) {
         return gamerRepository.findById(id).orElseThrow(GamerInfoNotFoundException::new);
     }
 
     @Override
-    public Set<GamerInformation> getExtendedUserInfos() {
+    public Set<Gamer> getExtendedUserInfos() {
         return new HashSet<>(gamerRepository.findAll());
     }
 
@@ -37,11 +44,42 @@ public class GamerServiceImpl implements GamerService {
     public void addRank(String username, String rankName) {
         String userId = userRepository.getUserByUsername(username).orElseThrow(UsernameNotFoundException::new).getId();
 
-        GamerInformation gamer = gamerRepository.findById(userId).orElseThrow(UserIdNotFoundException::new);
+        Gamer gamer = gamerRepository.findById(userId).orElseThrow(UserIdNotFoundException::new);
 
         Rank rank = rankRepository.getByName(rankName).orElseThrow(RankNotFoundException::new);
 
         gamer.addRank(rank);
         gamerRepository.save(gamer);
+    }
+
+    @Override
+    public void addFriend(String loggedUsername, String friendUsername) {
+        Gamer loggedGamer = getGamerByNickname(loggedUsername);
+        Gamer friend = getGamerByNickname(friendUsername);
+        loggedGamer.addFriend(Chat.SimpleUser.builder()
+                .firstName(friend.getFirstName())
+                .lastName(friend.getLastName())
+                .username(friendUsername)
+                .build()
+        );
+        gamerRepository.save(loggedGamer);
+        friend.addFriend(Chat.SimpleUser.builder()
+                .firstName(loggedGamer.getFirstName())
+                .lastName(loggedGamer.getLastName())
+                .username(loggedUsername)
+                .build()
+        );
+        gamerRepository.save(friend);
+    }
+
+    @Override
+    public Set<Gamer> getFriends(String username) {
+        Set<Gamer> friends = new HashSet<>();
+        Gamer gamer = getGamerByNickname(username);
+        if (gamer.getFriends() == null) {
+           return new HashSet<>();
+        }
+        gamer.getFriends().forEach(friend-> friends.add(getGamerByNickname(friend.getUsername())));
+        return friends;
     }
 }

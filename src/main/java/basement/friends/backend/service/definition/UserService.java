@@ -1,7 +1,7 @@
 package basement.friends.backend.service.definition;
 
 import basement.friends.backend.model.DTO.request.ChangePasswordRequest;
-import basement.friends.backend.model.GamerInformation;
+import basement.friends.backend.model.Gamer;
 import basement.friends.backend.model.User;
 
 import java.util.List;
@@ -20,9 +20,9 @@ public interface UserService {
 
     Set<User> getUsersByUsernames(Set<String> usernames);
 
-    Set<GamerInformation> getGamersByUsernames(Set<String> usernames);
+    Set<Gamer> getGamersByUsernames(Set<String> usernames);
 
-    GamerInformation getGamerInformationByUsername(String username);
+    Gamer getGamerInformationByUsername(String username);
 
     User save(User user);
 

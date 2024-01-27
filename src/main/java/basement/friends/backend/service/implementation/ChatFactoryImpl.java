@@ -1,7 +1,7 @@
 package basement.friends.backend.service.implementation;
 
 import basement.friends.backend.model.Chat;
-import basement.friends.backend.model.GamerInformation;
+import basement.friends.backend.model.Gamer;
 import basement.friends.backend.service.definition.ChatFactory;
 import org.springframework.stereotype.Service;
 
@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 public class ChatFactoryImpl implements ChatFactory {
 
     @Override
-    public Chat createFromRequest(Set<GamerInformation> users) {
+    public Chat createFromRequest(Set<Gamer> users) {
         return Chat.builder()
                 .users(users.stream().map(user -> Chat.SimpleUser.builder()
                         .username(user.getNickName())

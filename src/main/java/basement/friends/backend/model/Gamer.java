@@ -15,7 +15,7 @@ import java.util.Set;
 @Data
 @Builder
 @Document
-public class GamerInformation {
+public class Gamer {
     @Id
     private String id;
     private String firstName;
@@ -29,6 +29,8 @@ public class GamerInformation {
     private List<UserGameRecord> gameRecords;
 
     private Set<Rank> ranks;
+
+    private Set<Chat.SimpleUser> friends;
 
     private Address address;
 
@@ -45,6 +47,13 @@ public class GamerInformation {
             this.gameRecords = new ArrayList<>();
         }
         this.gameRecords.add(gameRecord);
+    }
+
+    public void addFriend(Chat.SimpleUser simpleUser) {
+        if (this.friends == null) {
+            this.friends = new HashSet<>();
+        }
+        this.friends.add(simpleUser);
     }
 
 

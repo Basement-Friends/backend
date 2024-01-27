@@ -6,7 +6,7 @@ import basement.friends.backend.exception.IncorrectPasswordException;
 import basement.friends.backend.exception.UsernameAlreadyTakenException;
 import basement.friends.backend.exception.UsernameNotFoundException;
 import basement.friends.backend.model.DTO.request.BasicUserRequest;
-import basement.friends.backend.model.GamerInformation;
+import basement.friends.backend.model.Gamer;
 import basement.friends.backend.model.User;
 import basement.friends.backend.repository.GamerRepository;
 import basement.friends.backend.repository.UserRepository;
@@ -39,13 +39,13 @@ public class AuthService {
                 .roles(Set.of(ROLE_USER))
                 .build();
         userRepository.save(user);
-        GamerInformation gamerInformation = GamerInformation.builder()
+        Gamer gamer = Gamer.builder()
                 .id(user.getId())
                 .firstName(request.getFirstName())
                 .lastName(request.getFirstName())
                 .nickName(request.getNickname() == null ? request.getUsername() : request.getNickname())
                 .build();
-        gamerRepository.save(gamerInformation);
+        gamerRepository.save(gamer);
         String jwtToken = jwtService.generateToken(user);
         return AuthenticationResponse.builder()
                 .token(jwtToken)
@@ -85,7 +85,7 @@ public class AuthService {
                         .email(req.getEmail())
                         .password(passwordEncoder.encode(req.getUsername()))
                         .build();
-                GamerInformation gamer = GamerInformation.builder()
+                Gamer gamer = Gamer.builder()
                         .nickName(req.getUsername())
                         .lastName(req.getLastname())
                         .firstName(req.getFirstname())
