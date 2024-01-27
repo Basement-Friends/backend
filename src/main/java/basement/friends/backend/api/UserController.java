@@ -4,11 +4,8 @@ import basement.friends.backend.auth.AuthService;
 import basement.friends.backend.model.DTO.request.BasicUserRequest;
 import basement.friends.backend.model.DTO.request.ChangePasswordRequest;
 import basement.friends.backend.model.DTO.request.GamerInformationRequest;
-import basement.friends.backend.model.DTO.request.RankRequest;
 import basement.friends.backend.model.DTO.response.EntityResponse;
-import basement.friends.backend.model.GamerInformation;
 import basement.friends.backend.model.User;
-import basement.friends.backend.service.definition.GamerService;
 import basement.friends.backend.service.definition.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +23,6 @@ import java.util.Set;
 @RequestMapping("api/user")
 public class UserController {
     private final UserService userService;
-    private final GamerService gamerService;
     private final AuthService authService;
 
 
@@ -42,23 +38,10 @@ public class UserController {
         return Optional.ofNullable(userService.getByUsername(username));
     }
 
-    @PreAuthorize("permitAll()")
-    @GetMapping("/info/{username}")
-    Optional<GamerInformation> getUserInfo(@PathVariable String username) {
-        return Optional.ofNullable(gamerService.getExtendedUserInfo(username));
-
-    }
-    @PreAuthorize("permitAll()")
-    @GetMapping("/info/all")
-    Set<GamerInformation> getUserInfo() {
-        return gamerService.getExtendedUserInfos();
-
-    }
-
     @PreAuthorize("hasAuthority({'ROLE_USER'})")
     @GetMapping()
-    Optional<User> getLoggedUser() {
-        return Optional.ofNullable(userService.getLoggedUser());
+    ResponseEntity<User> getLoggedUser() {
+        return ResponseEntity.ok().body(userService.getLoggedUser());
     }
 
     @PreAuthorize("hasAuthority({'ROLE_ADMIN'})")
@@ -90,16 +73,6 @@ public class UserController {
         return ResponseEntity.accepted()
                 .body(EntityResponse.builder()
                         .message("Password was successfully changed")
-                        .build());
-    }
-
-    @PreAuthorize("hasAuthority({'ROLE_ADMIN'})")
-    @PutMapping("/addRank/{username}")
-    public ResponseEntity<EntityResponse> addRankToUser(@RequestBody RankRequest request, @PathVariable String username) {
-        gamerService.addRank(username, request.getName());
-        return ResponseEntity.accepted()
-                .body(EntityResponse.builder()
-                        .message("Rank was added to user")
                         .build());
     }
 

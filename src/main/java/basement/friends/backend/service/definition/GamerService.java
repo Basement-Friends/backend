@@ -1,14 +1,20 @@
 package basement.friends.backend.service.definition;
 
-import basement.friends.backend.model.GamerInformation;
+import basement.friends.backend.model.Gamer;
 
 import java.util.Set;
 
 public interface GamerService {
 
-    GamerInformation getExtendedUserInfo(String id);
+    Gamer getGamerByNickname(String nickname);
 
-    Set<GamerInformation> getExtendedUserInfos();
+    Gamer getExtendedUserInfo(String id);
+
+    Set<Gamer> getExtendedUserInfos();
 
     void addRank(String username, String rank);
+
+    void addFriend(String loggedUsername, String friendUsername);
+
+    Set<Gamer> getFriends(String username);
 }

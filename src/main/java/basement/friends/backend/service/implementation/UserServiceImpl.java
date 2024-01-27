@@ -5,7 +5,7 @@ import basement.friends.backend.exception.GamerInfoNotFoundException;
 import basement.friends.backend.exception.UserIdNotFoundException;
 import basement.friends.backend.exception.UsernameNotFoundException;
 import basement.friends.backend.model.DTO.request.ChangePasswordRequest;
-import basement.friends.backend.model.GamerInformation;
+import basement.friends.backend.model.Gamer;
 import basement.friends.backend.model.Picture;
 import basement.friends.backend.model.User;
 import basement.friends.backend.repository.GamerRepository;
@@ -76,11 +76,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Set<GamerInformation> getGamersByUsernames(Set<String> usernames) {
-        Set<GamerInformation> selectedUsers = new HashSet<>();
+    public Set<Gamer> getGamersByUsernames(Set<String> usernames) {
+        Set<Gamer> selectedUsers = new HashSet<>();
         List<String> failedUsernames = new ArrayList<>();
         usernames.forEach(username -> {
-            extendedUserRepository.getGamerInformationByNickName(username).ifPresentOrElse(selectedUsers::add, () -> failedUsernames.add(username));
+            extendedUserRepository.getGamerByNickName(username).ifPresentOrElse(selectedUsers::add, () -> failedUsernames.add(username));
         });
         if (failedUsernames.isEmpty()) {
             return selectedUsers;
@@ -91,8 +91,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public GamerInformation getGamerInformationByUsername(String username) {
-        return extendedUserRepository.getGamerInformationByNickName(username).orElseThrow(GamerInfoNotFoundException::new);
+    public Gamer getGamerInformationByUsername(String username) {
+        return extendedUserRepository.getGamerByNickName(username).orElseThrow(GamerInfoNotFoundException::new);
     }
 
     @Override

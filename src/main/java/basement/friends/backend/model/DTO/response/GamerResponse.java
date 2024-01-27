@@ -2,15 +2,17 @@ package basement.friends.backend.model.DTO.response;
 
 import basement.friends.backend.model.Rank;
 import basement.friends.backend.model.UserGameRecord;
-import basement.friends.backend.model.enums.Gender;
+import lombok.Builder;
 import lombok.Data;
 import org.springframework.data.mongodb.core.index.Indexed;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Set;
 
 @Data
-public class GamerInfoFullResponse {
+@Builder
+public class GamerResponse {
 
     private String firstName;
 
@@ -19,9 +21,7 @@ public class GamerInfoFullResponse {
     @Indexed(unique = true)
     private String nickname;
 
-    private Gender gender;
-
-    private Set<UserGameRecord> gameRecords;
+    private List<UserGameRecord> gameRecords;
 
     private Set<Rank> ranks;
 

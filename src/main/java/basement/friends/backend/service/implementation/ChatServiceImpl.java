@@ -2,7 +2,7 @@ package basement.friends.backend.service.implementation;
 
 import basement.friends.backend.exception.ChatNotFoundException;
 import basement.friends.backend.model.Chat;
-import basement.friends.backend.model.GamerInformation;
+import basement.friends.backend.model.Gamer;
 import basement.friends.backend.model.Message;
 import basement.friends.backend.repository.ChatRepository;
 import basement.friends.backend.service.definition.ChatService;
@@ -27,7 +27,7 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
-    public Set<Chat> getByUsers(GamerInformation... gamers) {
+    public Set<Chat> getByUsers(Gamer... gamers) {
         Set<Chat.SimpleUser> usersSet = Arrays.stream(gamers).collect(Collectors.toSet()).stream().map(gamer -> Chat.SimpleUser.builder()
                 .username(gamer.getNickName())
                 .firstName(gamer.getFirstName())
@@ -42,7 +42,7 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
-    public Chat addUser(Chat chat, GamerInformation gamer) {
+    public Chat addUser(Chat chat, Gamer gamer) {
         Chat.SimpleUser simpleUser = Chat.SimpleUser.builder()
                 .username(gamer.getNickName())
                 .firstName(gamer.getFirstName())
@@ -66,7 +66,7 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
-    public void addUsers(String id, GamerInformation... gamers) {
+    public void addUsers(String id, Gamer... gamers) {
         Chat chat = this.getById(id);
         Arrays.stream(gamers).map(g ->
                 Chat.SimpleUser.builder()
@@ -78,7 +78,7 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
-    public void deleteUsers(String id, GamerInformation... gamers) {
+    public void deleteUsers(String id, Gamer... gamers) {
         Chat chat = this.getById(id);
         Arrays.stream(gamers).map(g ->
                 Chat.SimpleUser.builder()

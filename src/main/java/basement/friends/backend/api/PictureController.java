@@ -28,6 +28,7 @@ public class PictureController {
     private final PictureFactory pictureFactory;
     private final UserService userService;
     private final GamerService gamerService;
+    private final ProfilePictureValidator profilePictureValidator;
 
 
     @PreAuthorize("permitAll()")
@@ -36,7 +37,6 @@ public class PictureController {
         User loggedUser = userService.getLoggedUser();
         Picture profilePicture = pictureFactory.createFromFile(file, loggedUser);
         pictureService.savePicture(profilePicture);
-        ProfilePictureValidator profilePictureValidator = new ProfilePictureValidator();
         String validationMsg = profilePictureValidator.getPictureValidationMsg(file);
         if (profilePictureValidator.isValid()) {
             gamerService.addRank(loggedUser.getUsername(), "validated");
