@@ -7,6 +7,7 @@ import basement.friends.backend.exception.UsernameNotFoundException;
 import basement.friends.backend.model.Chat;
 import basement.friends.backend.model.Gamer;
 import basement.friends.backend.model.Rank;
+import basement.friends.backend.model.UserGameRecord;
 import basement.friends.backend.repository.GamerRepository;
 import basement.friends.backend.repository.RankRepository;
 import basement.friends.backend.repository.UserRepository;
@@ -73,6 +74,14 @@ public class GamerServiceImpl implements GamerService {
     }
 
     @Override
+    public void addGame(String nickname, UserGameRecord userGameRecord) {
+       Gamer gamer = getGamerByNickname(nickname);
+       gamer.addGameRecord(userGameRecord);
+       gamerRepository.save(gamer);
+
+    }
+
+    @Override
     public Set<Gamer> getFriends(String username) {
         Set<Gamer> friends = new HashSet<>();
         Gamer gamer = getGamerByNickname(username);
@@ -81,5 +90,10 @@ public class GamerServiceImpl implements GamerService {
         }
         gamer.getFriends().forEach(friend-> friends.add(getGamerByNickname(friend.getUsername())));
         return friends;
+    }
+
+    @Override
+    public void updateUser(Gamer gamer) {
+        gamerRepository.save(gamer);
     }
 }

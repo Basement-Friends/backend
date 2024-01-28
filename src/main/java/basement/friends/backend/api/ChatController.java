@@ -108,4 +108,6 @@ public class ChatController {
         return ResponseEntity.accepted().body(EntityResponse.builder().message("Message was send").build());
 
     }
+
+
 }
