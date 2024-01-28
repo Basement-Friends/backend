@@ -6,7 +6,6 @@ import lombok.Builder;
 import lombok.Data;
 import org.springframework.data.mongodb.core.index.Indexed;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 
@@ -24,13 +23,5 @@ public class GamerResponse {
     private List<UserGameRecord> gameRecords;
 
     private Set<Rank> ranks;
-
-    private String country;
-
-    private String city;
-
-    private LocalDate localTime;
-
-    private String pictureUrl;
 
 }
