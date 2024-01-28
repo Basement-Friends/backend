@@ -32,7 +32,6 @@ public class ToxicMessageValidator {
         ToxicMessageRequest toxicMsgRequest = ToxicMessageRequest.builder()
                 .message(messageRequest.getMsgText())
                 .build();
-
         try {
             this.setHeaders();
             ResponseEntity<String> response = restTemplate.postForEntity(

@@ -40,8 +40,8 @@ public class UserController {
 
     @PreAuthorize("hasAuthority({'ROLE_USER'})")
     @GetMapping()
-    Optional<User> getLoggedUser() {
-        return Optional.ofNullable(userService.getLoggedUser());
+    ResponseEntity<User> getLoggedUser() {
+        return ResponseEntity.ok().body(userService.getLoggedUser());
     }
 
     @PreAuthorize("hasAuthority({'ROLE_ADMIN'})")

@@ -9,6 +9,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -33,16 +35,13 @@ public class ProfilePictureValidator {
 
 
     public String getPictureValidationMsg(MultipartFile file) throws IOException {
-
-//        byte [] byteArray = file.getBytes();
-//
-//        String data = "\"data\": "+ Arrays.toString(byteArray);
-
         try {
             this.setHeaders();
+            MultiValueMap<String, Object> parts = new LinkedMultiValueMap<>();
+            parts.add("file", new HttpEntity<>(file.getResource(), headers));
             ResponseEntity<String> response = restTemplate.postForEntity(
                     this.URI,
-                    new HttpEntity<>(file.getBytes(), this.headers),
+                    parts,
                     String.class);
             return switch (Objects.requireNonNull(response.getBody())) {
                 case "0" -> "No human detected";
