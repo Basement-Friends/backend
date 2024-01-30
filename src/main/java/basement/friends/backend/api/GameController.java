@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @CrossOrigin
 @RestController
@@ -21,8 +20,8 @@ public class GameController {
 
     @PreAuthorize("permitAll()")
     @GetMapping("/all")
-    ResponseEntity<Set<String>> getAllGamers() {
-        return ResponseEntity.accepted().body(gameService.getAllGames().stream().map(Game::getName).collect(Collectors.toSet())
+    ResponseEntity<Set<Game>> getAllGamers() {
+        return ResponseEntity.accepted().body(gameService.getAllGames()
         );
     }
 
