@@ -1,6 +1,17 @@
 # About the project
 This repository is part of the Basement Friends App, originally created for a university project. It includes the backend, which is a REST API built with Java Spring Boot and uses MongoDB as its database.
 
+# Main project objectives
+The goal of the project was to create a web application that serves as a platform for displaying the profiles of computer gamers, allowing them to find people with similar game play history, essentially serving as a kind of LinkeIn for gamers. Users enter their personal information upon registration, and the system checks it for accuracy. Personal information includes first name(s), last name(s), email address, gender, a list of nicknames on gaming platforms and online games, date of birth, phone number, and a photo. Users can also provide a description and a list of games they are willing to play. The minimum age for users is set at 16 years old, and age verification is done by the user uploading a photo. Initially, a neural network checks if there is a human in the attached photo, and if so, a second network determines their age.
+
+When a player wants to find a playmate, they can set filters in the search panel. The system then selects candidates based on the filters, and their profiles are displayed. Users can choose to either reject a candidate or send them a message to arrange playing together. If the second option is selected, the rest of the candidates are automatically rejected. Users have access to their message history, and authorization is facilitated through JSON WebToken.
+
+The frontend is developed using Angular, while the backend is implemented in Java using the SpringBoot framework. To enhance image analysis capabilities, the project incorporates the YOLO neural network model, whose code is accessible on the GitHub platform at https://github.com/ultralytics/yolov5. The YOLO model is trained using the free dataset available at https://www.kaggle.com/datasets/sbaghbidi/human-faces-object-detection/. This dataset aids in detecting the presence of humans in images.
+
+If the YOLO model identifies a human in the photo, an additional model is employed to determine the age of the individual, serving as a verification step for the age provided by the user. The second model, a Convolutional Neural Network (CNN), is trained using the free dataset found on the Kaggle platform at https://www.kaggle.com/datasets/frabbisw/facial-age.
+
+For efficient management of dependencies and isolation of the application environment, the entire project is published and deployed using Docker containers. This approach ensures streamlined deployment and facilitates the reproducibility of the application environment.
+
 
 # Database Schema
 The following picture shows the project database schema:
