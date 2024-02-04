@@ -17,6 +17,10 @@ For efficient management of dependencies and isolation of the application enviro
 The following picture shows the project database schema:
 ![image](https://github.com/Basement-Friends/backend/assets/72508414/d57d1d57-0e35-41f1-8e28-2e39a2891fe5)
 
+# Endpoints
+
+https://universal-meteor-227901.postman.co/workspace/8fcf76f3-7120-41ef-a44d-45013b9e83df/documentation/19971041-c51cbe3f-c558-4acb-9fe2-6a22c5699020
+
 # Helpfull tools for developing and testing:
 * Postmann
 * Mongo Express
