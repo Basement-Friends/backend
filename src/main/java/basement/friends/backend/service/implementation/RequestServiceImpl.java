@@ -1,5 +1,6 @@
 package basement.friends.backend.service.implementation;
 
+import basement.friends.backend.exception.RequestAlreadyExistsException;
 import basement.friends.backend.exception.RequestNotFoundException;
 import basement.friends.backend.model.Request;
 import basement.friends.backend.model.User;
@@ -22,8 +23,11 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
-    public Request saveRequest(Request request) {
-        return requestRepository.save(request);
+    public void saveRequest(Request request) {
+        if (requestRepository.existsByUserIdAndInitiator(request.getUserId(), request.getInitiator())) {
+            throw new RequestAlreadyExistsException();
+        }
+        requestRepository.save(request);
     }
 
     @Override

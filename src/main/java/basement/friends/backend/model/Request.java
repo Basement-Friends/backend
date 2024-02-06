@@ -1,5 +1,6 @@
 package basement.friends.backend.model;
 
+import basement.friends.backend.model.DTO.request.BasicUserRequest;
 import basement.friends.backend.model.enums.RequestStatus;
 import lombok.Builder;
 import lombok.Data;
@@ -18,7 +19,7 @@ public class Request {
 
     String userId;
 
-    User initiator;
+    BasicUserRequest initiator;
 
     RequestStatus status;
 

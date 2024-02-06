@@ -1,6 +1,7 @@
 package basement.friends.backend.api;
 
 import basement.friends.backend.model.Chat;
+import basement.friends.backend.model.DTO.request.BasicUserRequest;
 import basement.friends.backend.model.DTO.response.EntityResponse;
 import basement.friends.backend.model.DTO.response.RequestResponse;
 import basement.friends.backend.model.Gamer;
@@ -40,11 +41,17 @@ public class RequestController {
     public ResponseEntity<EntityResponse> createFriendRequest(@PathVariable String username) {
         User user = userService.getByUsername(username);
         User loggedUser = userService.getLoggedUser();
+        Gamer gamer = gamerService.getExtendedUserInfo(loggedUser.getId());
         Request friendRequest = Request.builder()
                 .creationDate(new Date())
                 .userId(user.getId())
                 .updateDate(new Date())
-                .initiator(loggedUser)
+                .initiator(BasicUserRequest.builder()
+                        .firstname(gamer.getFirstName())
+                        .lastname(gamer.getLastName())
+                        .username(loggedUser.getUsername())
+                        .email(loggedUser.getEmail())
+                        .build())
                 .status(RequestStatus.PENDING)
                 .build();
         requestService.saveRequest(friendRequest);
@@ -60,7 +67,7 @@ public class RequestController {
         Request request = Request.builder().status(RequestStatus.ACCEPTED).build();
         User loggedUser = userService.getLoggedUser();
         Gamer gamer = gamerService.getExtendedUserInfo(loggedUser.getId());
-        Gamer initiator = gamerService.getExtendedUserInfo(request.getInitiator().getId());
+        Gamer initiator = gamerService.getGamerByNickname(request.getInitiator().getUsername());
         requestService.updateRequest(id, request);
         Set<Gamer> gamerSet = new HashSet<>(Set.of(gamer, initiator));
         gamerService.addFriend(loggedUser.getUsername(), initiator.getNickName());
@@ -97,7 +104,7 @@ public class RequestController {
         return ResponseEntity.ok()
                 .body(requestService.getAllUserRequests(user).stream().map(
                         req -> RequestResponse.builder()
-                                .from(gamerService.getExtendedUserInfo(req.getInitiator().getId()).getFirstName() + gamerService.getExtendedUserInfo(req.getInitiator().getId()).getLastName())
+                                .from(gamerService.getGamerByNickname(req.getInitiator().getUsername()).getFirstName() + gamerService.getGamerByNickname(req.getInitiator().getUsername()).getLastName())
                                 .type("Friend request")
                                 .creationDate(req.getCreationDate())
                                 .updateDate(req.getUpdateDate())
@@ -112,7 +119,7 @@ public class RequestController {
         return ResponseEntity.ok()
                 .body(requestService.getAllUserRequests(user).stream().map(
                         req -> RequestResponse.builder()
-                                .from(gamerService.getExtendedUserInfo(req.getInitiator().getId()).getFirstName() + gamerService.getExtendedUserInfo(req.getInitiator().getId()).getLastName())
+                                .from(gamerService.getGamerByNickname(req.getInitiator().getUsername()).getFirstName() + gamerService.getGamerByNickname(req.getInitiator().getUsername()).getLastName())
                                 .type("Friend request")
                                 .creationDate(req.getCreationDate())
                                 .updateDate(req.getUpdateDate())
