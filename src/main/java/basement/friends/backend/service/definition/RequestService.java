@@ -8,7 +8,7 @@ import java.util.Set;
 public interface RequestService {
     Set<Request> getAllUserRequests(User user);
 
-    Request saveRequest(Request request);
+    void saveRequest(Request request);
 
     void updateRequest(String id, Request request);
 

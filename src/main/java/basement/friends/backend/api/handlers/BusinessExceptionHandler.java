@@ -100,4 +100,10 @@ public class BusinessExceptionHandler {
         return new ErrorResponse(exception);
     }
 
+    @ExceptionHandler(RequestAlreadyExistsException.class)
+    @ResponseStatus(value = HttpStatus.FORBIDDEN)
+    public ErrorResponse getRequestAlreadyExistsExceptionResponse(RequestAlreadyExistsException exception) {
+        return new ErrorResponse(exception);
+    }
+
 }
