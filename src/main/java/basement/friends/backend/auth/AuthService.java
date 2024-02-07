@@ -42,7 +42,7 @@ public class AuthService {
         Gamer gamer = Gamer.builder()
                 .id(user.getId())
                 .firstName(request.getFirstName())
-                .lastName(request.getFirstName())
+                .lastName(request.getLastName())
                 .nickName(request.getNickname() == null ? request.getUsername() : request.getNickname())
                 .build();
         gamerRepository.save(gamer);
