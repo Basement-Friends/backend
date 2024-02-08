@@ -17,6 +17,10 @@ For efficient management of dependencies and isolation of the application enviro
 The following picture shows the project database schema:
 ![image](https://github.com/Basement-Friends/backend/assets/72508414/d57d1d57-0e35-41f1-8e28-2e39a2891fe5)
 
+# Class Diagram
+
+![image](https://github.com/Basement-Friends/backend/assets/72508414/0ba891ee-fa56-47a4-b20a-bffc9f40390e)
+
 
 # Helpfull tools for developing and testing:
 * Postmann
