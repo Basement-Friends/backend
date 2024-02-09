@@ -21,6 +21,16 @@ The following picture shows the project database schema:
 
 ![image](https://github.com/Basement-Friends/backend/assets/72508414/0ba891ee-fa56-47a4-b20a-bffc9f40390e)
 
+# Technologies used to create the Backend:
+* Java 21
+* MongoDB
+* Spring Boot
+* Spring Security
+* Spring Data
+* Lombok
+* JWT Token
+* Docker
+
 
 # Helpfull tools for developing and testing:
 * Postmann
