@@ -12,6 +12,12 @@ If the YOLO model identifies a human in the photo, an additional model is employ
 
 For efficient management of dependencies and isolation of the application environment, the entire project is published and deployed using Docker containers. This approach ensures streamlined deployment and facilitates the reproducibility of the application environment.
 
+# Key functionalities of the project
+* Login and creating user account
+* Ability to send friend requests
+* Sending messages to firends
+* Viewing profiles from other gamers
+
 
 # Database Schema
 The following picture shows the project database schema:
