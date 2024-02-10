@@ -12,10 +12,30 @@ If the YOLO model identifies a human in the photo, an additional model is employ
 
 For efficient management of dependencies and isolation of the application environment, the entire project is published and deployed using Docker containers. This approach ensures streamlined deployment and facilitates the reproducibility of the application environment.
 
+# Key functionalities of the project
+* Login and creating user account
+* Ability to send friend requests
+* Sending messages to firends
+* Viewing profiles from other gamers
+
 
 # Database Schema
 The following picture shows the project database schema:
 ![image](https://github.com/Basement-Friends/backend/assets/72508414/d57d1d57-0e35-41f1-8e28-2e39a2891fe5)
+
+# Class Diagram
+
+![image](https://github.com/Basement-Friends/backend/assets/72508414/0ba891ee-fa56-47a4-b20a-bffc9f40390e)
+
+# Technologies used to create the Backend:
+* Java 21
+* MongoDB
+* Spring Boot
+* Spring Security
+* Spring Data
+* Lombok
+* JWT Token
+* Docker
 
 
 # Helpfull tools for developing and testing:
