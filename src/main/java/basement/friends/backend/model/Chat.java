@@ -18,6 +18,12 @@ public class Chat {
     private String id;
     private Stack<Message> messages;
 
+    public Stack<Message> getMessages() {
+        if (this.messages == null)
+            this.messages = new Stack<>();
+        return messages;
+    }
+
     public void addUsers(SimpleUser user) {
         users.add(user);
     }
