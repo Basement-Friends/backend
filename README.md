@@ -27,6 +27,57 @@ The following picture shows the project database schema:
 
 ![image](https://github.com/Basement-Friends/backend/assets/72508414/0ba891ee-fa56-47a4-b20a-bffc9f40390e)
 
+## Authentication API
+
+Explore the authentication API using the interactive Swagger documentation.
+
+### Login
+
+#### Endpoint: `/api/auth/login`
+
+- **Method**: POST
+- **Request Body**:
+
+  ```json
+  {
+    "username": "jtest",
+    "password": "123"
+  }
+Response: Successful login
+<details>
+  <summary>Click to expand</summary>
+Try it out
+
+
+</details>
+Register
+Endpoint: /api/auth/register
+Method: POST
+
+Request Body:
+
+json
+Copy code
+{
+  "email": "alex.smith@email.com",
+  "firstName": "Alex",
+  "lastName": "Smith",
+  "username": "asmith",
+  "password": "securePass789"
+}
+Response: Successful registration
+
+<details>
+  <summary>Click to expand</summary>
+Try it out
+
+
+</details>
+```
+
+
+
+
 # Technologies used to create the Backend:
 * Java 21
 * MongoDB
