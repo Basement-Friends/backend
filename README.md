@@ -1,4 +1,4 @@
-# About the project
+# Introduction
 This repository is part of the Basement Friends App, originally created for a university project. It includes the backend, which is a REST API built with Java Spring Boot and uses MongoDB as its database.
 
 # Main project objectives
